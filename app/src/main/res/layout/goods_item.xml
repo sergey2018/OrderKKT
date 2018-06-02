@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <CheckBox
+        android:layout_width="50dp"
+        android:button="@null"
+        android:layout_marginTop="10dp"
+        android:background="?android:attr/listChoiceIndicatorMultiple"
+        android:layout_height="50dp"
+        android:id="@+id/goods_select"/>
+
+    <TextView
+        android:id="@+id/goods_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/goods_select"
+        android:fontFamily="@font/im_fell_english"
+        android:text="Суши "
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/goods_name"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/price_quantyt"
+        android:layout_toRightOf="@+id/goods_select"
+        android:fontFamily="@font/domine"
+        android:text="2 x 200.00"
+        android:textSize="20sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/domine"
+        android:textColor="#2ece2e"
+        android:text="400 руб."
+        android:textStyle="bold"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/goods_name"
+        android:textSize="20sp"
+        android:layout_alignParentRight="true"
+        android:id="@+id/goods_sum"/>
+
+</RelativeLayout>
