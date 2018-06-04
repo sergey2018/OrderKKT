@@ -47,6 +47,7 @@ public class OrderFragment extends Fragment {
 
     private void update(){
         final ArrayList<Order> orders = OrderLab.getInstance(getActivity()).getOrder();
+        if(orders == null)return;
         OrderAdapter adapter = new OrderAdapter(orders);
         mOrderView.setAdapter(adapter);
         DividerItemDecoration decoration = new DividerItemDecoration(mOrderView.getContext(),DividerItemDecoration.VERTICAL);

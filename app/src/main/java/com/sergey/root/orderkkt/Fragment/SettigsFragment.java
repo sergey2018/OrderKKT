@@ -8,12 +8,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.sergey.root.orderkkt.Preferes;
 import com.sergey.root.orderkkt.R;
 import com.sergey.root.orderkkt.Yandex;
+import com.sergey.root.orderkkt.YandexService;
 import com.yandex.authsdk.YandexAuthException;
 import com.yandex.authsdk.YandexAuthOptions;
 import com.yandex.authsdk.YandexAuthSdk;
@@ -22,6 +27,7 @@ import com.yandex.authsdk.YandexAuthToken;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 
@@ -36,6 +42,16 @@ public class SettigsFragment extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.contact_name)
     EditText mContactName;
+    @BindView(R.id.KKT_type)
+    Spinner mKKTType;
+    @BindView(R.id.ip_adress)
+    EditText mIpAdress;
+    @BindView(R.id.port)
+    EditText mPort;
+    @BindView(R.id.test_kkt)
+    Button mTestKkt;
+    @BindView(R.id.shtrih)
+    LinearLayout mShtrih;
     private YandexAuthSdk mSdk;
 
     public SettigsFragment() {
@@ -60,9 +76,10 @@ public class SettigsFragment extends Fragment {
 
 
     @OnTextChanged(R.id.contact_name)
-    void onText(CharSequence s){
-        Preferes.setCuryer(getActivity(),s.toString());
+    void onText(CharSequence s) {
+        Preferes.setCuryer(getActivity(), s.toString());
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +89,23 @@ public class SettigsFragment extends Fragment {
         getActivity().setTitle("Настройки");
         mContactName.setText(Preferes.getCuryer(getActivity()));
         mSdk = new YandexAuthSdk(new YandexAuthOptions(getActivity(), true));
+        mKKTType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0: mShtrih.setVisibility(View.GONE);
+                        break;
+                    case 1: mShtrih.setVisibility(View.VISIBLE);
+                    break;
+                    default:mShtrih.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         return view;
     }
 
@@ -94,5 +128,14 @@ public class SettigsFragment extends Fragment {
             yandex.createDirectory();
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(getActivity(), "Настройка завершена", Toast.LENGTH_LONG).show();
+            YandexService.setServiceAlarm(getActivity(), true);
+        }
     }
+
+
 }

@@ -4,13 +4,16 @@ import android.content.Context;
 
 import com.sergey.root.orderkkt.Model.ListItem;
 import com.yandex.disk.rest.Credentials;
+import com.yandex.disk.rest.ProgressListener;
 import com.yandex.disk.rest.ResourcesArgs;
 import com.yandex.disk.rest.ResourcesHandler;
 import com.yandex.disk.rest.RestClient;
 import com.yandex.disk.rest.exceptions.NetworkIOException;
+import com.yandex.disk.rest.exceptions.ServerException;
 import com.yandex.disk.rest.exceptions.ServerIOException;
 import com.yandex.disk.rest.json.Resource;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -32,6 +35,15 @@ public class Yandex {
         direct = mContext.getResources().getString(R.string.app_name);
     }
 
+    public void dowloadsFile(String path, File f, ProgressListener listener){
+        try {
+            mClient.downloadFile(direct+"/"+dir+"/Загрузка"+"/"+path,f,listener);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ServerException e) {
+            e.printStackTrace();
+        }
+    }
     public ArrayList<ListItem> getItem(){
         final ArrayList<ListItem> items = new ArrayList<>();
         int offset = 0;
@@ -40,7 +52,7 @@ public class Yandex {
         try {
             do{
 
-                r = mClient.getResources(new ResourcesArgs.Builder().setPath("").setSort(ResourcesArgs.Sort.name).setOffset(offset).setParsingHandler(new ResourcesHandler() {
+                r = mClient.getResources(new ResourcesArgs.Builder().setPath(direct+"/"+dir+"/Загрузка").setSort(ResourcesArgs.Sort.name).setOffset(offset).setParsingHandler(new ResourcesHandler() {
                     @Override
                     public void handleItem(Resource item) {
                         items.add(new ListItem(item));
@@ -60,13 +72,43 @@ public class Yandex {
     }
     public void createDirectory(){
         try {
-            mClient.makeFolder(direct);
-            mClient.makeFolder(direct+"/"+dir);
-            mClient.makeFolder(direct+"/"+dir+"/Загрузка");
+
+            if(getFile(direct)) {
+                mClient.makeFolder(direct + "/" + dir);
+                mClient.makeFolder(direct + "/" + dir + "/Загрузка");
+            }
+            else {
+                mClient.makeFolder(direct + "/" + dir);
+                mClient.makeFolder(direct + "/" + dir + "/Загрузка");
+            }
+
         } catch (ServerIOException e) {
             e.printStackTrace();
         } catch (NetworkIOException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+    public void delete(String path){
+        try {
+            mClient.delete(path,true);
+        } catch (ServerIOException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private boolean getFile(String file){
+        try {
+            mClient.makeFolder(file);
+            return false;
+        } catch (ServerIOException e) {
+
+            e.printStackTrace();
+        } catch (NetworkIOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }

@@ -1,15 +1,19 @@
 package com.sergey.root.orderkkt.Model;
 
+import android.text.format.DateFormat;
+
+import java.util.Date;
 import java.util.UUID;
 
 public class Order {
     private UUID mAcct;
     private String mContact;
-    private int mNumber;
+
     private String Adress;
     private int mGoods;
-
+    private Date mDate;
     private int mStatus;
+    private int count;
     private String mPhone;
     private String mNote;
 
@@ -41,15 +45,6 @@ public class Order {
         return mAcct;
     }
 
-
-    public int getNumber() {
-        return mNumber;
-    }
-
-    public void setNumber(int number) {
-        mNumber = number;
-    }
-
     public String getPhone() {
         return mPhone;
     }
@@ -76,5 +71,26 @@ public class Order {
 
     public void setNote(String note) {
         mNote = note;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public Date getDate() {
+        return mDate;
+    }
+
+    public String getDateText(){
+        DateFormat format = new DateFormat();
+        return (String) format.format("dd.MM.yyyy",mDate);
     }
 }

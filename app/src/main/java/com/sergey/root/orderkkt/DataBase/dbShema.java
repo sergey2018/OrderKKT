@@ -15,6 +15,7 @@ public class dbShema {
         public static final String NAME="zakaz";
         public static final class Cols{
             public static final String ACCT="acct";
+            public static final String DATE="date";
             public static final String GOODS = "goods_id";
             public static final String ADRESS="adres";
             public static final String PHONE = "phone";

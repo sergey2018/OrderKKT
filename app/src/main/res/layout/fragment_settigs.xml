@@ -32,6 +32,6 @@
         android:entries="@array/KKT"
         android:id="@+id/KKT_type"/>
     <include layout="@layout/sthrih_lan"
-        android:visibility="gone"/>
+      />
 
 </LinearLayout>

@@ -30,8 +30,18 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'd2xx:d2xx:1.0',
+            'jpos:jpos113:1.13',
+            'org.slf4j:slf4j-api:1.7.21',
+            'xerces4android:xerces4android:1.0',
+            'zxing:zxing:3.2.2'
     implementation 'com.yandex.android:authsdk:2.0.0'
     implementation 'com.yandex.android:disk-restapi-sdk:1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.android.support:design:27.1.1'
+    compile project(path: ':FptrServiceAndroid')
+}
+repositories {
+    jcenter()
+    flatDir { dirs = ["../libs"] }
 }

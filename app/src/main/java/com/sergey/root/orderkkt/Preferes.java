@@ -6,7 +6,8 @@ import android.preference.PreferenceManager;
 public class Preferes {
     private static final String YANDEX="yandex";
     private static final String CURYER="curer";
-    private static final String FIRST = "first";
+    private static final String IP_adres="ip_adres";
+    private static final String PORT="port";
 
     public static void setToken(Context context, String token){
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString(YANDEX,token).apply();
@@ -22,11 +23,16 @@ public class Preferes {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(CURYER,null);
     }
 
-    public static void setFirst(Context context, boolean f){
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(FIRST,f).apply();
+    public static void setIP_adres(Context context,String ip){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(IP_adres,ip).apply();
     }
-    public static boolean getFlag(Context context){
-        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(FIRST,false);
+    public static String getIP_adres(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(IP_adres,"");
     }
-
+    public static void  setPort(Context context, String port){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(PORT,port).apply();
+    }
+    public static String getPort(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(PORT,"");
+    }
 }

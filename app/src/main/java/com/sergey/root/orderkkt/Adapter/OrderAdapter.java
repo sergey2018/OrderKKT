@@ -41,27 +41,31 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
 
     public class OrderHolder extends RecyclerView.ViewHolder{
 
-        private TextView mNumber,mAdres,mPhone,mContact,mStatus;
+        private TextView mAdres,mPhone,mContact,mStatus,mDate;
         public OrderHolder(View itemView) {
             super(itemView);
-            mNumber = itemView.findViewById(R.id.number_order);
             mAdres = itemView.findViewById(R.id.text_adress);
             mPhone =itemView.findViewById(R.id.phone);
             mContact = itemView.findViewById(R.id.contact);
             mStatus = itemView.findViewById(R.id.status);
+            mDate = itemView.findViewById(R.id.date_order);
         }
         public void setOrder(Order order){
-            mNumber.setText("Заказ №" + order.getNumber());
             mAdres.setText(order.getAdress());
+            mDate.setText(order.getDateText());
             mPhone.setText(order.getPhone());
             mContact.setText(order.getContact());
             if(order.getStatus() == 0) {
                 mStatus.setText("Недоставлен");
                 mStatus.setTextColor(Color.parseColor("#ff0000"));
             }
-            else {
+            else if(order.getStatus() == order.getCount()){
                 mStatus.setText("Доставлен");
                 mStatus.setTextColor(Color.parseColor("#00ff00"));
+            }
+            else {
+                mStatus.setText("Частично доставлен");
+                mStatus.setTextColor(Color.parseColor("#ffff00"));
             }
         }
     }
