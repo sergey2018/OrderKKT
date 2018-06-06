@@ -11,6 +11,9 @@
     <string name="ip">IP_адрес</string>
     <string name="port">Порт</string>
     <string name="settings">Настройки</string>
+    <string name="summ">Итого</string>
+    <string name="input_cash">Оплата</string>
+    <string name="curer">Введите имя курьера</string>
     <string-array name="KKT">
         <item>Нет</item>
         <item>Штрих-М (LAN)</item>

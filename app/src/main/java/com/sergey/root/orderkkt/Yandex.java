@@ -86,8 +86,6 @@ public class Yandex {
             e.printStackTrace();
         } catch (NetworkIOException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
     public void delete(String path){

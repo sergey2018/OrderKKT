@@ -6,6 +6,7 @@ public class Goods {
     private double mPrice;
     private double mQuantity;
     private int Tax;
+    private String mCode;
     private boolean mFlags = true;
 
     public int getId() {
@@ -69,5 +70,13 @@ public class Goods {
             break;
         }
 
+    }
+
+    public String getCode() {
+        return mCode;
+    }
+
+    public void setCode(String code) {
+        mCode = code;
     }
 }

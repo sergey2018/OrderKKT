@@ -15,6 +15,7 @@ public class DB_Helper extends SQLiteOpenHelper {
                 "_id integer primary key autoincrement, "+
                 dbShema.GOODS.Cols.NAME + " text, "+
                 dbShema.GOODS.Cols.PRICE + " real, "+
+                dbShema.GOODS.Cols.CODE + " text, "+
                 dbShema.GOODS.Cols.QUANT + " real, "+
                 dbShema.GOODS.Cols.TAX + " integer)");
         db.execSQL("create table " + dbShema.ORDER.NAME + " ("+

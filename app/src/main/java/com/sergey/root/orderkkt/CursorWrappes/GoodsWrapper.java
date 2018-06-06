@@ -22,6 +22,7 @@ public class GoodsWrapper extends CursorWrapper {
         goods.setName(getString(getColumnIndex(dbShema.GOODS.Cols.NAME)));
         goods.setPrice(getDouble(getColumnIndex(dbShema.GOODS.Cols.PRICE)));
         goods.setQuantity(getDouble(getColumnIndex(dbShema.GOODS.Cols.QUANT)));
+        goods.setCode(getString(getColumnIndex(dbShema.GOODS.Cols.CODE)));
         goods.setFlags(true);
         goods.setTax(getInt(getColumnIndex(dbShema.GOODS.Cols.TAX)));
         return goods;

@@ -68,6 +68,7 @@ public class OrderFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
         unbinder = ButterKnife.bind(this, view);
         mOrderView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        getActivity().setTitle("Заказы");
         update();
         setHasOptionsMenu(true);
         return view;

@@ -6,11 +6,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 import com.sergey.root.orderkkt.CursorWrappes.GoodsWrapper;
 import com.sergey.root.orderkkt.CursorWrappes.OrderWrappes;
 import com.sergey.root.orderkkt.DataBase.dbShema.GOODS;
 import com.sergey.root.orderkkt.DataBase.dbShema.ORDER;
+import com.sergey.root.orderkkt.KKT.AtolPrintKKT;
+import com.sergey.root.orderkkt.KKT.KKT;
+import com.sergey.root.orderkkt.KKT.ShtrihPrintKKT;
 import com.sergey.root.orderkkt.Model.Goods;
 import com.sergey.root.orderkkt.Model.Order;
 import com.sergey.root.orderkkt.Preferes;
@@ -38,6 +43,9 @@ import javax.xml.parsers.ParserConfigurationException;
 public class OrderLab {
     private static  OrderLab ourInstance;
     private SQLiteDatabase mHelper;
+    private Context mContext;
+    private boolean isON = false;
+    private KKT mKKT;
 
     public static OrderLab getInstance(Context context) {
         if(ourInstance == null){
@@ -45,35 +53,21 @@ public class OrderLab {
         }
         return ourInstance;
     }
+    public String getDescription(){
+        return mKKT.getErrorDescription();
+    }
 
     private OrderLab(Context context) {
         mHelper = new DB_Helper(context.getApplicationContext()).getWritableDatabase();
-       /* if(!Preferes.getFlag(context)){
-            for (int i = 0; i<10; i++){
-                Goods goods = new Goods();
-                goods.setName("Товар " + (i+1));
-                goods.setPrice((i+1)*10);
-                goods.setQuantity(i+1);
-                goods.setTax(4);
-                mHelper.insert(GOODS.NAME,null,addGoods(goods));
-            }
-            for (int i = 0; i<10; i++){
-                UUID act = UUID.randomUUID();
-                for (int j = 1; j<9; j++){
-                    Order order = new Order();
-                    order.setAcct(act);
-                    order.setNumber(i + 1);
-                    order.setGoods(j);
-                    order.setAdress("Сиреневый" + i);
-                    order.setContact("Сергей");
-                    order.setPhone("+73424126005");
-                    order.setStatus(0);
-                    order.setNote("");
-                    mHelper.insert(ORDER.NAME,null,addOrder(order));
-                }
-            }
-            Preferes.setFirst(context,true);
-        }*/
+        mContext = context;
+        int kkt = Preferes.getSelect(context);
+        switch (kkt){
+            case 1: mKKT = new ShtrihPrintKKT();
+            break;
+            case 2: mKKT = new AtolPrintKKT();
+            default:isON = true;
+            break;
+        }
     }
 
     public ArrayList<Order> getOrder(){
@@ -138,6 +132,7 @@ public class OrderLab {
         ContentValues values = new ContentValues();
         values.put(GOODS.Cols.NAME,goods.getName());
         values.put(GOODS.Cols.PRICE,goods.getPrice());
+        values.put(GOODS.Cols.CODE,goods.getCode());
         values.put(GOODS.Cols.QUANT,goods.getQuantity());
         values.put(GOODS.Cols.TAX,goods.getTax());
         return values;
@@ -166,6 +161,7 @@ public class OrderLab {
         values.put(ORDER.Cols.STATUS,status);
         mHelper.update(ORDER.NAME,values,ORDER.Cols.ACCT+" = ? and "+ORDER.Cols.GOODS+" = ?",new String[]{acct.toString(),String.valueOf(id)});
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void setXML(File file){
         try {
             InputStream  stream = new FileInputStream(file);
@@ -194,11 +190,21 @@ public class OrderLab {
                         goods.setName(element.getAttribute("name"));
                         goods.setPrice(Double.parseDouble(element.getAttribute("price")));
                         goods.setQuantity(Double.parseDouble(element.getAttribute("qtty")));
+
                         goods.setTax(Integer.parseInt(element.getAttribute("tax")));
-                        mHelper.insert(GOODS.NAME,null,addGoods(goods));
-                        int id = getId();
-                        order.setGoods(id);
-                        mHelper.insert(ORDER.NAME,null,addOrder(order));
+                        goods.setCode(element.getAttribute("code"));
+                        int d = getDouble(goods);
+                        if(d == 0) {
+                            mHelper.insert(GOODS.NAME, null, addGoods(goods));
+
+                            int id = getId();
+                            order.setGoods(id);
+                            mHelper.insert(ORDER.NAME, null, addOrder(order));
+                        }
+                        else {
+                            order.setGoods(d);
+                            mHelper.insert(ORDER.NAME, null, addOrder(order));
+                        }
 
                     }
                 }
@@ -215,19 +221,46 @@ public class OrderLab {
         }
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private int getId(){
-        Cursor cursor = getQuery(false,GOODS.NAME,new String[]{"Max(_id) as _id"},null,null,null,null);
-        try {
-            if(cursor.getCount() == 0){
+        try (Cursor cursor = getQuery(false, GOODS.NAME, new String[]{"Max(_id) as _id"}, null, null, null, null)) {
+            if (cursor.getCount() == 0) {
                 return 0;
             }
             cursor.moveToFirst();
-            int id = cursor.getInt(cursor.getColumnIndex("_id"));
-            return id;
+            return cursor.getInt(cursor.getColumnIndex("_id"));
+        }
+    }
+
+    private int getDouble(Goods goods){
+        Cursor cursor = getQuery(false,GOODS.NAME,new String[]{"_id"},GOODS.Cols.NAME + " = ? ",new String[]{goods.getName()},null,null);
+        try {
+            if (cursor.getCount() == 0){
+                return 0;
+            }
+            cursor.moveToFirst();
+            return cursor.getInt(cursor.getColumnIndex("_id"));
         }
         finally {
             cursor.close();
         }
+    }
+
+    public void sale(ArrayList<Goods> goods,String type){
+        if(!isON){
+            mKKT.Sale(goods,type);
+        }
+    }
+    public void connect(){
+        if(!isON){
+            mKKT.connect(mContext);
+        }
+    }
+    public String Devices(){
+        return mKKT.getDevises();
+    }
+    public boolean getError(){
+        return mKKT.getError();
     }
 
 }

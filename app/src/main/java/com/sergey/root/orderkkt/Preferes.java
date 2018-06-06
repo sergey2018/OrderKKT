@@ -8,6 +8,8 @@ public class Preferes {
     private static final String CURYER="curer";
     private static final String IP_adres="ip_adres";
     private static final String PORT="port";
+    private static final String SELECT="select";
+    private static final String onKKT="kkt";
 
     public static void setToken(Context context, String token){
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString(YANDEX,token).apply();
@@ -34,5 +36,12 @@ public class Preferes {
     }
     public static String getPort(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context).getString(PORT,"");
+    }
+
+    public static void setSelect(Context context, int s){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(SELECT,s).apply();
+    }
+    public static int getSelect(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(SELECT, 0);
     }
 }

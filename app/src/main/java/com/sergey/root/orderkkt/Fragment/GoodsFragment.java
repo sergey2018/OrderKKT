@@ -3,6 +3,7 @@ package com.sergey.root.orderkkt.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,6 +46,7 @@ public class GoodsFragment extends Fragment {
     @BindView(R.id.nal_no_cash)
     Button mNalNoCash;
     private UUID id;
+    private String type;
     private ArrayList<Goods> mGoods;
     // TODO: Rename and change types of parameters
 
@@ -63,7 +65,7 @@ public class GoodsFragment extends Fragment {
                        OrderLab.getInstance(getActivity()).sales(id,value,mGoods.get(i).getId(),0);
                    }
                    else {
-                       OrderLab.getInstance(getActivity()).sales(id,"Оплата",mGoods.get(i).getId(),1);
+                       OrderLab.getInstance(getActivity()).sales(id,type,mGoods.get(i).getId(),1);
                    }
                }
                getActivity().finish();
@@ -120,15 +122,8 @@ public class GoodsFragment extends Fragment {
     }
     @OnClick(R.id.nal_no_cash)
     void OnClick(){
-        if(getFalse()) {
-            OrderLab.getInstance(getActivity()).sales(id, "Оплата");
-            getActivity().finish();
-        }else {
-            FragmentManager manager = getFragmentManager();
-            NoteDialogFragment dialogFragment = new NoteDialogFragment();
-            dialogFragment.setTargetFragment(GoodsFragment.this,1);
-            dialogFragment.show(manager,"note");
-        }
+        type = "Оплата наличными";
+        new KKTTask().execute(type);
     }
 
     private boolean getFalse(){
@@ -138,5 +133,33 @@ public class GoodsFragment extends Fragment {
             }
         }
         return true;
+    }
+
+    private class KKTTask extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            if(strings[0].equals("Оплата наличными")){
+                OrderLab.getInstance(getActivity()).sale(mGoods,"0");
+            }
+            else{
+                OrderLab.getInstance(getActivity()).sale(mGoods,"1");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(getFalse()) {
+                OrderLab.getInstance(getActivity()).sales(id, type);
+                getActivity().finish();
+            }else {
+                FragmentManager manager = getFragmentManager();
+                NoteDialogFragment dialogFragment = new NoteDialogFragment();
+                dialogFragment.setTargetFragment(GoodsFragment.this,1);
+                dialogFragment.show(manager,"note");
+            }
+        }
     }
 }

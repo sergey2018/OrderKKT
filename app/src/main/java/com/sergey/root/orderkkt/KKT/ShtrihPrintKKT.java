@@ -47,12 +47,14 @@ public class ShtrihPrintKKT implements KKT {
             mPrinter.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
             mPrinter.beginFiscalReceipt(false);
             for (int i = 0; i < sale.size(); i++) {
-                String name = sale.get(i).getName();
-                long price = toLong(new BigDecimal(sale.get(i).getPrice()));
-                int tax = sale.get(i).getTax();
-                int qtty = (int)new BigDecimal(sale.get(i).getQuantity()).multiply(new BigDecimal(1000)).intValueExact();
-                mPrinter.printRecItem(name, 0, qtty, tax, price, "2wer");
-                summ = summ + (price*qtty);
+              if(sale.get(i).isFlags()){
+                  String name = sale.get(i).getName();
+                  long price = toLong(new BigDecimal(sale.get(i).getPrice()));
+                  int tax = sale.get(i).getTax();
+                  int qtty = (int)new BigDecimal(sale.get(i).getQuantity()).multiply(new BigDecimal(1000)).intValueExact();
+                  mPrinter.printRecItem(name, 0, qtty, tax, price, "2wer");
+                  summ = summ + (price*qtty);
+              }
             }
             mPrinter.printRecTotal(summ, summ, type);
             //Email("rabot1993@gmail.com");
@@ -181,7 +183,7 @@ try {
         try {
             String portName = Preferes.getIP_adres(context)+":"+Preferes.getPort(context);
             //SysUtils.setFilesPath(context.getFilesDir().getAbsolutePath());
-            JposConfig.configure("ShtrihFptr", portName, context,"2","0");
+            JposConfig.configure("ShtrihFptr", portName, context);
         } catch (Exception e) {
             e.printStackTrace();
             return;

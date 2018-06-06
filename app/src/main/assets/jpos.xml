@@ -15,13 +15,13 @@
 		<jpos category="FiscalPrinter" version="1.9"/>
 		<product description="Fiscal printer service" name="ShtrihFptr" url="http://www.javapos.com"/>
 		<!-- Port type: 0 - serial, 1 - bluetooth, 2 - socket, 3 - from parameter protClass -->
-		<prop name="portType" type="String" value="3"/>
+		<prop name="portType" type="String" value="2"/>
 		<!-- portClass  -->
 		<!--<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.FtdiPrinterPort"/>  -->
 		<prop name="portClass" type="String" value="com.shtrih.fiscalprinter.port.BluetoothPort"/>
 		<!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
 		<!-- ProtocolType, 0 - protocol 1, 1 - protocol 2 -->
-		<prop name="protocolType" type="String" value="1"/>
+		<prop name="protocolType" type="String" value="0"/>
 		<!--Port name-->
 		<!--For serial ports - COM1, for TCP ports: host:port - "10.11.7.210:12345" -->
 		<!--<prop name="portName" type="String" value="10.11.7.210:12345"/> -->

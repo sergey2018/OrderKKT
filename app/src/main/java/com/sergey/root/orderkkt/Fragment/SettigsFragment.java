@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.sergey.root.orderkkt.DataBase.OrderLab;
+import com.sergey.root.orderkkt.Model.Order;
 import com.sergey.root.orderkkt.Preferes;
 import com.sergey.root.orderkkt.R;
 import com.sergey.root.orderkkt.Yandex;
@@ -74,12 +76,19 @@ public class SettigsFragment extends Fragment {
         }
     }
 
-
     @OnTextChanged(R.id.contact_name)
     void onText(CharSequence s) {
         Preferes.setCuryer(getActivity(), s.toString());
     }
 
+    @OnTextChanged(R.id.ip_adress)
+    void OnIp(CharSequence s){
+        Preferes.setIP_adres(getActivity(),s.toString());
+    }
+    @OnTextChanged(R.id.port)
+    void OnPort(CharSequence s){
+        Preferes.setPort(getActivity(),s.toString());
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,9 +98,13 @@ public class SettigsFragment extends Fragment {
         getActivity().setTitle("Настройки");
         mContactName.setText(Preferes.getCuryer(getActivity()));
         mSdk = new YandexAuthSdk(new YandexAuthOptions(getActivity(), true));
+        mKKTType.setSelection(Preferes.getSelect(getActivity()));
+        mIpAdress.setText(Preferes.getIP_adres(getActivity()));
+        mPort.setText(Preferes.getPort(getActivity()));
         mKKTType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Preferes.setSelect(getActivity(),position);
                 switch (position){
                     case 0: mShtrih.setVisibility(View.GONE);
                         break;
@@ -117,7 +130,12 @@ public class SettigsFragment extends Fragment {
 
     @OnClick(R.id.yandex_login)
     void onClick() {
-        startActivityForResult(mSdk.createLoginIntent(getActivity(), null), 1);
+       if(mContactName.getText().length()>0){
+           startActivityForResult(mSdk.createLoginIntent(getActivity(), null), 1);
+       }
+       else {
+           Toast.makeText(getActivity(),"Не введено имя курьера",Toast.LENGTH_LONG).show();
+       }
     }
 
     private class YandexTask extends AsyncTask<Void, Void, Void> {
@@ -134,6 +152,30 @@ public class SettigsFragment extends Fragment {
             super.onPostExecute(aVoid);
             Toast.makeText(getActivity(), "Настройка завершена", Toast.LENGTH_LONG).show();
             YandexService.setServiceAlarm(getActivity(), true);
+        }
+    }
+    @OnClick(R.id.test_kkt)
+    void Test(){
+        new KKTTask().execute();
+    }
+
+    private class KKTTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            OrderLab.getInstance(getActivity()).connect();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(!OrderLab.getInstance(getActivity()).getError()){
+                Toast.makeText(getActivity(), OrderLab.getInstance(getActivity()).Devices(), Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(getActivity(), OrderLab.getInstance(getActivity()).getDescription(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
