@@ -1,30 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".Fragment.GoodsFragment"
     android:orientation="vertical">
+
     <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
         android:id="@+id/goods_list"
-        android:layout_height="370dp"/>
-    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
+        android:layout_height="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginBottom="43dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+
         <Button
-            android:layout_width="match_parent"
-            android:text="Оплата Карта"
             android:id="@+id/saleKatr"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <Button
             android:layout_width="match_parent"
-            android:text="Оплата Наличными"
-            android:id="@+id/nal_no_cash"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:textColor="@color/textColorPrimary"
+            android:background="@drawable/x_report"
+            android:text="Оплата Карта"/>
+
+        <Button
+            android:id="@+id/nal_no_cash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/textColorPrimary"
+            android:background="@drawable/sale_report"
+            android:text="Оплата Наличными"/>
     </LinearLayout>
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/summ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="47dp"
+        android:layout_marginEnd="163dp"
+        android:layout_marginLeft="163dp"
+        android:layout_marginRight="163dp"
+        android:layout_marginStart="163dp"
+        android:layout_marginTop="40dp"
+        android:textAlignment="center"
+        android:text="Итого: 3000 рублей"
+        android:textColor="@color/sum"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goods_list"
+        app:layout_constraintVertical_bias="0.51"/>
+
+</android.support.constraint.ConstraintLayout>

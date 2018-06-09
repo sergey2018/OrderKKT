@@ -3,6 +3,7 @@ package com.sergey.root.orderkkt.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,14 +40,31 @@ public class OrderFragment extends Fragment {
     @BindView(R.id.order_view)
     RecyclerView mOrderView;
     Unbinder unbinder;
+    private int mStatus = 0;
+    private static final String ARG_STATSUS = "status";
 
     public OrderFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mStatus = getArguments().getInt(ARG_STATSUS);
+
+    }
+
+    public static Fragment newIntents(int status){
+        OrderFragment fragment = new OrderFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ARG_STATSUS,status);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
 
     private void update(){
-        final ArrayList<Order> orders = OrderLab.getInstance(getActivity()).getOrder();
+        final ArrayList<Order> orders = OrderLab.getInstance(getActivity()).getOrder(mStatus);
         if(orders == null)return;
         OrderAdapter adapter = new OrderAdapter(orders);
         mOrderView.setAdapter(adapter);
@@ -55,9 +73,11 @@ public class OrderFragment extends Fragment {
         mOrderView.addOnItemTouchListener(new GoodsClickListener(getActivity(), new GoodsClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                UUID id = orders.get(position).getAcct();
-                Intent intent = GoodsActivity.newIntent(getActivity(),id);
-                startActivity(intent);
+                if(orders.get(position).getStatus() == 0){
+                    UUID id = orders.get(position).getAcct();
+                    Intent intent = GoodsActivity.newIntent(getActivity(),id);
+                    startActivity(intent);
+                }
             }
         }));
     }

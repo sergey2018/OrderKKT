@@ -2,6 +2,7 @@ package com.sergey.root.orderkkt.Fragment;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sergey.root.orderkkt.Adapter.GoodsAdapter;
 import com.sergey.root.orderkkt.DataBase.OrderLab;
@@ -45,8 +48,16 @@ public class GoodsFragment extends Fragment {
     Unbinder unbinder;
     @BindView(R.id.nal_no_cash)
     Button mNalNoCash;
+    @BindView(R.id.saleKatr)
+    Button mSaleKatr;
+    @BindView(R.id.linearLayout)
+    LinearLayout mLinearLayout;
+    @BindView(R.id.summ)
+    TextView mSumm;
     private UUID id;
     private String type;
+    private String value;
+    private ProgressDialog mDialog = new ProgressDialog(getActivity());
     private ArrayList<Goods> mGoods;
     // TODO: Rename and change types of parameters
 
@@ -57,19 +68,11 @@ public class GoodsFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1 && resultCode == Activity.RESULT_OK){
-           if(data != null){
-               String value = data.getStringExtra(EXTRA_NOTE);
-               for(int i = 0; i<mGoods.size(); i++){
-                   if(!mGoods.get(i).isFlags()){
-                       OrderLab.getInstance(getActivity()).sales(id,value,mGoods.get(i).getId(),0);
-                   }
-                   else {
-                       OrderLab.getInstance(getActivity()).sales(id,type,mGoods.get(i).getId(),1);
-                   }
-               }
-               getActivity().finish();
-           }
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                value = data.getStringExtra(EXTRA_NOTE);
+                new KKTTask().execute(type);
+            }
         }
     }
 
@@ -89,18 +92,29 @@ public class GoodsFragment extends Fragment {
     }
 
     private void update() {
-                GoodsAdapter adapter = new GoodsAdapter(mGoods);
+        GoodsAdapter adapter = new GoodsAdapter(mGoods);
         mGoodsList.setAdapter(adapter);
         DividerItemDecoration decoration = new DividerItemDecoration(mGoodsList.getContext(), DividerItemDecoration.VERTICAL);
         mGoodsList.addItemDecoration(decoration);
+        double sum = summ();
+        mSumm.setText("Итого: " + sum + " руб.");
     }
 
+    public double summ(){
+        double summ = 0;
+        for (int i = 0; i<mGoods.size(); i++){
+            if(mGoods.get(i).isFlags()){
+                summ = summ + mGoods.get(i).summ();
+            }
+        }
+        return summ;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             id = (UUID) getArguments().getSerializable(ARG_ACT);
-            mGoods =  OrderLab.getInstance(getActivity()).getGoods(id);
+            mGoods = OrderLab.getInstance(getActivity()).getGoods(id);
         }
     }
 
@@ -110,6 +124,9 @@ public class GoodsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_goods, container, false);
         unbinder = ButterKnife.bind(this, view);
+        getActivity().setTitle("Товары");
+        mDialog.setMessage("Передача в кассовый апарат");
+        mDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         mGoodsList.setLayoutManager(new LinearLayoutManager(getActivity()));
         update();
         return view;
@@ -120,45 +137,69 @@ public class GoodsFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
     @OnClick(R.id.nal_no_cash)
-    void OnClick(){
+    void OnClick() {
         type = "Оплата наличными";
+       if(getFalse()){
+           new KKTTask().execute(type);
+       }
+       else {
+           FragmentManager manager = getFragmentManager();
+           NoteDialogFragment dialogFragment = new NoteDialogFragment();
+           dialogFragment.setTargetFragment(GoodsFragment.this, 1);
+           dialogFragment.show(manager, "note");
+       }
+    }
+    @OnClick(R.id.saleKatr)
+    void Kart(){
+        type = "Оплата картой";
         new KKTTask().execute(type);
     }
 
-    private boolean getFalse(){
-        for (Goods g:mGoods) {
-            if(!g.isFlags()){
+    private boolean getFalse() {
+        for (Goods g : mGoods) {
+            if (!g.isFlags()) {
                 return false;
             }
         }
         return true;
     }
 
-    private class KKTTask extends AsyncTask<String,Void,Void>{
+    private class KKTTask extends AsyncTask<String, Void, Void> {
 
         @Override
         protected Void doInBackground(String... strings) {
-            if(strings[0].equals("Оплата наличными")){
-                OrderLab.getInstance(getActivity()).sale(mGoods,"0");
-            }
-            else{
-                OrderLab.getInstance(getActivity()).sale(mGoods,"1");
+            if (strings[0].equals("Оплата наличными")) {
+                OrderLab.getInstance(getActivity()).sale(mGoods, "0");
+            } else {
+                OrderLab.getInstance(getActivity()).sale(mGoods, "1");
             }
             return null;
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mDialog.show();
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if(getFalse()) {
+            mDialog.dismiss();
+            if (getFalse()) {
                 OrderLab.getInstance(getActivity()).sales(id, type);
                 getActivity().finish();
-            }else {
-                FragmentManager manager = getFragmentManager();
-                NoteDialogFragment dialogFragment = new NoteDialogFragment();
-                dialogFragment.setTargetFragment(GoodsFragment.this,1);
-                dialogFragment.show(manager,"note");
+            } else {
+                for (int i = 0; i < mGoods.size(); i++) {
+                    if (!mGoods.get(i).isFlags()) {
+                        OrderLab.getInstance(getActivity()).sales(id, value, mGoods.get(i).getId(), 0);
+                    } else {
+                        OrderLab.getInstance(getActivity()).sales(id, type, mGoods.get(i).getId(), 1);
+                    }
+                }
+                getActivity().finish();
             }
         }
     }

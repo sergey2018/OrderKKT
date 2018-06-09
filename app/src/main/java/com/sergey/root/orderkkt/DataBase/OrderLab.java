@@ -63,6 +63,7 @@ public class OrderLab {
         int kkt = Preferes.getSelect(context);
         switch (kkt){
             case 1: mKKT = new ShtrihPrintKKT();
+            mKKT.init(context);
             break;
             case 2: mKKT = new AtolPrintKKT();
             default:isON = true;
@@ -70,11 +71,11 @@ public class OrderLab {
         }
     }
 
-    public ArrayList<Order> getOrder(){
+    public ArrayList<Order> getOrder(int status){
         ArrayList<Order> list = null;
         String table = ORDER.NAME;
         String [] colums = new String[]{ORDER.Cols.ACCT,ORDER.Cols.PHONE,ORDER.Cols.NOTE,ORDER.Cols.CONTACT,ORDER.Cols.ADRESS,"SUM("+ORDER.Cols.STATUS+") AS "+ORDER.Cols.STATUS,"COUNT("+ORDER.Cols.STATUS+") AS cour",ORDER.Cols.DATE};
-        Cursor cursor = getQuery(true,table,colums,null,null,ORDER.Cols.ACCT,null);
+        Cursor cursor = getQuery(true,table,colums,ORDER.Cols.STATUS+" = ?",new String[]{String.valueOf(status)},ORDER.Cols.ACCT,null);
         OrderWrappes value = new OrderWrappes(cursor);
         try{
             if(value.getCount() == 0){
@@ -253,7 +254,8 @@ public class OrderLab {
     }
     public void connect(){
         if(!isON){
-            mKKT.connect(mContext);
+            mKKT.init(mContext);
+            mKKT.connect();
         }
     }
     public String Devices(){

@@ -43,7 +43,12 @@ public class AtolPrintKKT implements KKT {
     }
 
     @Override
-    public void connect(Context context) {
+    public void init(Context context) {
+
+    }
+
+    @Override
+    public void connect() {
 
     }
 

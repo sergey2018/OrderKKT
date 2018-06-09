@@ -7,6 +7,7 @@ import android.util.Log;
 import com.sergey.root.orderkkt.Model.Goods;
 import com.sergey.root.orderkkt.Preferes;
 import com.shtrih.fiscalprinter.ShtrihFiscalPrinter;
+import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class ShtrihPrintKKT implements KKT {
             long summ = 0;
 
             mPrinter.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
+
+            mPrinter.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM,8);
             mPrinter.beginFiscalReceipt(false);
             for (int i = 0; i < sale.size(); i++) {
               if(sale.get(i).isFlags()){
@@ -179,7 +182,7 @@ try {
     }
 
     @Override
-    public void connect(Context context) {
+    public void init(Context context) {
         try {
             String portName = Preferes.getIP_adres(context)+":"+Preferes.getPort(context);
             //SysUtils.setFilesPath(context.getFilesDir().getAbsolutePath());
@@ -188,7 +191,7 @@ try {
             e.printStackTrace();
             return;
         }
-            connect();
+            //connect();
     }
 
     @Override

@@ -18,7 +18,8 @@ public interface KKT {
     public void close();
     public String getDevises();
     public void Email(String Email);
-    public void connect(Context context);
+    public void init(Context context);
+    public void connect();
     public boolean getError();
     public String getErrorDescription();
     public void Cash(long sum);
