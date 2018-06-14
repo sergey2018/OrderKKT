@@ -35,7 +35,7 @@ public class ShtrihPrintKKT implements KKT {
     }
 
     @Override
-    public void Sale(final ArrayList<Goods> sale, String type) {
+    public void Sale(final ArrayList<Goods> sale, String type,double summ) {
         if (mPrinter == null) {
             return;
         }
@@ -43,7 +43,7 @@ public class ShtrihPrintKKT implements KKT {
         try {
              connect();
             mPrinter.resetPrinter();
-            long summ = 0;
+            long sum = 0;
 
             mPrinter.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
 
@@ -56,10 +56,10 @@ public class ShtrihPrintKKT implements KKT {
                   int tax = sale.get(i).getTax();
                   int qtty = (int)new BigDecimal(sale.get(i).getQuantity()).multiply(new BigDecimal(1000)).intValueExact();
                   mPrinter.printRecItem(name, 0, qtty, tax, price, "2wer");
-                  summ = summ + (price*qtty);
+                  sum = sum + (price*qtty);
               }
             }
-            mPrinter.printRecTotal(summ, summ, type);
+            mPrinter.printRecTotal(sum,sum , type);
             //Email("rabot1993@gmail.com");
             mPrinter.endFiscalReceipt(false);
 

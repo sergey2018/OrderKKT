@@ -75,7 +75,7 @@ public class OrderLab {
         ArrayList<Order> list = null;
         String table = ORDER.NAME;
         String [] colums = new String[]{ORDER.Cols.ACCT,ORDER.Cols.PHONE,ORDER.Cols.NOTE,ORDER.Cols.CONTACT,ORDER.Cols.ADRESS,"SUM("+ORDER.Cols.STATUS+") AS "+ORDER.Cols.STATUS,"COUNT("+ORDER.Cols.STATUS+") AS cour",ORDER.Cols.DATE};
-        Cursor cursor = getQuery(true,table,colums,ORDER.Cols.STATUS+" = ?",new String[]{String.valueOf(status)},ORDER.Cols.ACCT,null);
+        Cursor cursor = getQuery(true,table,colums,ORDER.Cols.STATUS+" = ?",new String[]{String.valueOf(status)},ORDER.Cols.ACCT,ORDER.Cols.DATE+" DESC");
         OrderWrappes value = new OrderWrappes(cursor);
         try{
             if(value.getCount() == 0){
@@ -247,9 +247,9 @@ public class OrderLab {
         }
     }
 
-    public void sale(ArrayList<Goods> goods,String type){
+    public void sale(ArrayList<Goods> goods,String type,double sum){
         if(!isON){
-            mKKT.Sale(goods,type);
+            mKKT.Sale(goods,type,sum);
         }
     }
     public void connect(){

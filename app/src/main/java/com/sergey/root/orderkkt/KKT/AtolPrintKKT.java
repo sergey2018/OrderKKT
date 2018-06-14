@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class AtolPrintKKT implements KKT {
     @Override
-    public void Sale(ArrayList<Goods> sale, String type) {
+    public void Sale(ArrayList<Goods> sale, String type,double summ) {
 
     }
 

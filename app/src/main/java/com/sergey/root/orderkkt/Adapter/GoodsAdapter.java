@@ -42,6 +42,10 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsHolder>
         holder.setGoods(goods);
     }
 
+    public ArrayList<Goods> getGoods() {
+        return mGoods;
+    }
+
     @Override
     public int getItemCount() {
         return mGoods.size();

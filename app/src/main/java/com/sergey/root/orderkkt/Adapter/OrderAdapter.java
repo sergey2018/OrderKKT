@@ -1,12 +1,16 @@
 package com.sergey.root.orderkkt.Adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sergey.root.orderkkt.Model.Order;
 import com.sergey.root.orderkkt.R;
@@ -16,9 +20,12 @@ import java.util.ArrayList;
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>{
 
     private ArrayList<Order> mOrders;
+    private Context mContext;
 
-    public OrderAdapter(ArrayList<Order> orders) {
+    public OrderAdapter(ArrayList<Order> orders, Context context)
+    {
         mOrders = orders;
+        mContext = context;
     }
 
     @NonNull
@@ -29,8 +36,30 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OrderHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final OrderHolder holder, int position) {
         Order order = mOrders.get(position);
+
+        holder.mClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(mContext,holder.mClick);
+                popupMenu.inflate(R.menu.menu_phone);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.phone_call:
+                                Toast.makeText(mContext,"Звонок",Toast.LENGTH_LONG).show();
+                                break;
+                                default:
+                                    break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
         holder.setOrder(order);
     }
 
@@ -40,7 +69,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
     }
 
     public class OrderHolder extends RecyclerView.ViewHolder{
-
+        public TextView mClick;
         private TextView mAdres,mPhone,mContact,mStatus,mDate;
         public OrderHolder(View itemView) {
             super(itemView);
@@ -49,6 +78,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
             mContact = itemView.findViewById(R.id.contact);
             mStatus = itemView.findViewById(R.id.status);
             mDate = itemView.findViewById(R.id.date_order);
+            mClick = itemView.findViewById(R.id.txtOptionDigit);
         }
         public void setOrder(Order order){
             mAdres.setText(order.getAdress());

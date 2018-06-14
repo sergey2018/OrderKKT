@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.sergey.root.orderkkt.Adapter.GoodsAdapter;
 import com.sergey.root.orderkkt.DataBase.OrderLab;
+import com.sergey.root.orderkkt.GoodsClickListener;
 import com.sergey.root.orderkkt.Model.Goods;
 import com.sergey.root.orderkkt.R;
 
@@ -57,7 +58,7 @@ public class GoodsFragment extends Fragment {
     private UUID id;
     private String type;
     private String value;
-    private ProgressDialog mDialog = new ProgressDialog(getActivity());
+    private ProgressDialog mDialog;
     private ArrayList<Goods> mGoods;
     // TODO: Rename and change types of parameters
 
@@ -69,6 +70,12 @@ public class GoodsFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                value = data.getStringExtra(EXTRA_NOTE);
+                new KKTTask().execute(type);
+            }
+        }
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 value = data.getStringExtra(EXTRA_NOTE);
                 new KKTTask().execute(type);
@@ -92,13 +99,28 @@ public class GoodsFragment extends Fragment {
     }
 
     private void update() {
-        GoodsAdapter adapter = new GoodsAdapter(mGoods);
+        final GoodsAdapter adapter = new GoodsAdapter(mGoods);
         mGoodsList.setAdapter(adapter);
+        mGoodsList.addOnItemTouchListener(new GoodsClickListener(getActivity(), new GoodsClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+              if(  adapter.getGoods().get(position).isFlags()){
+                  adapter.getGoods().get(position).setFlags(false);
+              }
+              else {
+                  adapter.getGoods().get(position).setFlags(true);
+              }
+                double sum = summ();
+                mSumm.setText("Итого: " + sum + " руб.");
+                adapter.notifyDataSetChanged();
+            }
+        }));
         DividerItemDecoration decoration = new DividerItemDecoration(mGoodsList.getContext(), DividerItemDecoration.VERTICAL);
         mGoodsList.addItemDecoration(decoration);
         double sum = summ();
         mSumm.setText("Итого: " + sum + " руб.");
     }
+
 
     public double summ(){
         double summ = 0;
@@ -125,6 +147,7 @@ public class GoodsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_goods, container, false);
         unbinder = ButterKnife.bind(this, view);
         getActivity().setTitle("Товары");
+        mDialog = new ProgressDialog(getActivity());
         mDialog.setMessage("Передача в кассовый апарат");
         mDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         mGoodsList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -142,7 +165,10 @@ public class GoodsFragment extends Fragment {
     void OnClick() {
         type = "Оплата наличными";
        if(getFalse()){
-           new KKTTask().execute(type);
+           FragmentManager manager = getFragmentManager();
+           DialogCash cash = DialogCash.newIntens(summ());
+           cash.setTargetFragment(GoodsFragment.this,2);
+           cash.show(manager,"cash");
        }
        else {
            FragmentManager manager = getFragmentManager();
@@ -150,6 +176,8 @@ public class GoodsFragment extends Fragment {
            dialogFragment.setTargetFragment(GoodsFragment.this, 1);
            dialogFragment.show(manager, "note");
        }
+
+
     }
     @OnClick(R.id.saleKatr)
     void Kart(){
@@ -171,9 +199,9 @@ public class GoodsFragment extends Fragment {
         @Override
         protected Void doInBackground(String... strings) {
             if (strings[0].equals("Оплата наличными")) {
-                OrderLab.getInstance(getActivity()).sale(mGoods, "0");
+                OrderLab.getInstance(getActivity()).sale(mGoods, "0",summ());
             } else {
-                OrderLab.getInstance(getActivity()).sale(mGoods, "1");
+                OrderLab.getInstance(getActivity()).sale(mGoods, "1",summ());
             }
             return null;
         }

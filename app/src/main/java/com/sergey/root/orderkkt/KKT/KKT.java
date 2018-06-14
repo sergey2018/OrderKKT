@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 
 public interface KKT {
-    public void Sale(ArrayList<Goods> sale, String type);
+    public void Sale(ArrayList<Goods> sale, String type,double summ);
     public void ReturnSale(ArrayList<Goods> sales, String type);
     public void XReport();
     public void ZReport();
