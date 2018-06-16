@@ -1,10 +1,18 @@
 package com.sergey.root.orderkkt.Fragment;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +84,16 @@ public class SettigsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == 0 && grantResults.length == 1){
+            if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                startActivityForResult(mSdk.createLoginIntent(getActivity(), null), 1);
+            }
+        }
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
     @OnTextChanged(R.id.contact_name)
     void onText(CharSequence s) {
         Preferes.setCuryer(getActivity(), s.toString());
@@ -131,7 +149,20 @@ public class SettigsFragment extends Fragment {
     @OnClick(R.id.yandex_login)
     void onClick() {
        if(mContactName.getText().length()>0){
-           startActivityForResult(mSdk.createLoginIntent(getActivity(), null), 1);
+           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES .M) {
+               if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                       == PackageManager.PERMISSION_DENIED) {
+                   ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+               }
+               else {
+                   startActivityForResult(mSdk.createLoginIntent(getActivity(), null), 1);
+               }
+           }
+           else {
+               startActivityForResult(mSdk.createLoginIntent(getActivity(), null), 1);
+           }
+
+
        }
        else {
            Toast.makeText(getActivity(),"Не введено имя курьера",Toast.LENGTH_LONG).show();

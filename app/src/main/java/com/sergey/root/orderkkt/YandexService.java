@@ -2,13 +2,20 @@ package com.sergey.root.orderkkt;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
+import com.sergey.root.orderkkt.Activity.MainActivity;
 import com.sergey.root.orderkkt.DataBase.OrderLab;
 import com.sergey.root.orderkkt.Model.ListItem;
 import com.yandex.disk.rest.ProgressListener;
@@ -51,6 +58,7 @@ public class YandexService extends IntentService implements ProgressListener{
     // TODO: Customize helper method
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onHandleIntent(Intent intent) {
         File file = new File(Environment.getExternalStorageDirectory(), "Order");
@@ -70,6 +78,20 @@ public class YandexService extends IntentService implements ProgressListener{
         yandex.dowloadsFile(item.getName(),file1,YandexService.this);
         OrderLab.getInstance(this).setXML(file1);
         yandex.delete(item.getPath());
+        Resources r = getResources();
+        Intent i = MainActivity.newIntent(this);
+        PendingIntent pi = PendingIntent.getActivity(this,0,i,0);
+        Notification notification = new NotificationCompat.Builder(this).setTicker("Данные обновлены")
+                .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                .setContentTitle("Добавлены новые заказы")
+                .setContentText("Добавлены заказы")
+                .setContentIntent(pi)
+                .setAutoCancel(true)
+                .build();
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(this);
+        notificationManager.notify(0, notification);
+
     }
 
     @Override

@@ -72,7 +72,7 @@ public class OrderLab {
     }
 
     public ArrayList<Order> getOrder(int status){
-        ArrayList<Order> list = null;
+        ArrayList<Order> list = new ArrayList<>();
         String table = ORDER.NAME;
         String [] colums = new String[]{ORDER.Cols.ACCT,ORDER.Cols.PHONE,ORDER.Cols.NOTE,ORDER.Cols.CONTACT,ORDER.Cols.ADRESS,"SUM("+ORDER.Cols.STATUS+") AS "+ORDER.Cols.STATUS,"COUNT("+ORDER.Cols.STATUS+") AS cour",ORDER.Cols.DATE};
         Cursor cursor = getQuery(true,table,colums,ORDER.Cols.STATUS+" = ?",new String[]{String.valueOf(status)},ORDER.Cols.ACCT,ORDER.Cols.DATE+" DESC");
@@ -80,8 +80,7 @@ public class OrderLab {
         try{
             if(value.getCount() == 0){
                 return list;
-            }
-            list = new ArrayList<>();
+            };
             value.moveToFirst();
             while (!value.isAfterLast()){
               Order order = value.getOrder();
@@ -264,5 +263,7 @@ public class OrderLab {
     public boolean getError(){
         return mKKT.getError();
     }
-
+    public void zreport(){
+        mKKT.ZReport();
+    }
 }

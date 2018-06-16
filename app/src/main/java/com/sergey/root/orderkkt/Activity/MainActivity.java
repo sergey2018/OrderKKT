@@ -1,5 +1,7 @@
 package com.sergey.root.orderkkt.Activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -74,5 +76,9 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    public static Intent newIntent(Context conext){
+        return new Intent(conext,MainActivity.class);
     }
 }

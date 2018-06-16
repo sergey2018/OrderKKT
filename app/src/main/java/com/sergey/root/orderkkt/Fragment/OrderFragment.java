@@ -42,7 +42,7 @@ public class OrderFragment extends Fragment {
     Unbinder unbinder;
     private int mStatus = 0;
     private static final String ARG_STATSUS = "status";
-
+    private OrderAdapter adapter;
     public OrderFragment() {
         // Required empty public constructor
     }
@@ -66,8 +66,14 @@ public class OrderFragment extends Fragment {
     private void update(){
         final ArrayList<Order> orders = OrderLab.getInstance(getActivity()).getOrder(mStatus);
         if(orders == null)return;
-        OrderAdapter adapter = new OrderAdapter(orders,getActivity());
-        mOrderView.setAdapter(adapter);
+        if(adapter == null){
+            adapter = new OrderAdapter(orders,getActivity());
+            mOrderView.setAdapter(adapter);
+        }
+        else {
+            adapter.setOrders(orders);
+            adapter.notifyDataSetChanged();
+        }
         DividerItemDecoration decoration = new DividerItemDecoration(mOrderView.getContext(),DividerItemDecoration.VERTICAL);
         mOrderView.addItemDecoration(decoration);
         mOrderView.addOnItemTouchListener(new GoodsClickListener(getActivity(), new GoodsClickListener.OnItemClickListener() {
