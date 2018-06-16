@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -125,6 +126,11 @@ public class OrderFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), SettinsActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.z_report:
+                FragmentManager manager = getFragmentManager();
+                ReportDialog dialog = new ReportDialog();
+                dialog.setTargetFragment(OrderFragment.this,3);
+                dialog.show(manager,"report");
                 default:
                     return super.onOptionsItemSelected(item);
         }
