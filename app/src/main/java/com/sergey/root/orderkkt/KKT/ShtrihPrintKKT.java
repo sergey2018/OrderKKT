@@ -28,6 +28,7 @@ public class ShtrihPrintKKT implements KKT {
     private ShtrihFiscalPrinter mPrinter = null;
     private String Description;
     private String Device;
+    private String Casir;
     private boolean mError = false;
 
     public ShtrihPrintKKT() {
@@ -44,7 +45,7 @@ public class ShtrihPrintKKT implements KKT {
              connect();
             mPrinter.resetPrinter();
             long sum = 0;
-
+            mPrinter.writeCashierName(Casir);
             mPrinter.setFiscalReceiptType(jpos.FiscalPrinterConst.FPTR_RT_SALES);
 
             mPrinter.setParameter(SmFptrConst.SMFPTR_DIO_PARAM_TAX_SYSTEM,8);
@@ -84,6 +85,7 @@ public class ShtrihPrintKKT implements KKT {
             connect();
 
             mPrinter.resetPrinter();
+            mPrinter.writeCashierName(Casir);
             long summ = 0;
             mPrinter.setFiscalReceiptType(FiscalPrinterConst.FPTR_RT_REFUND);
             mPrinter.beginFiscalReceipt(false);
@@ -185,6 +187,7 @@ try {
     public void init(Context context) {
         try {
             String portName = Preferes.getIP_adres(context)+":"+Preferes.getPort(context);
+            Casir = Preferes.getCuryer(context);
             //SysUtils.setFilesPath(context.getFilesDir().getAbsolutePath());
             JposConfig.configure("ShtrihFptr", portName, context);
         } catch (Exception e) {

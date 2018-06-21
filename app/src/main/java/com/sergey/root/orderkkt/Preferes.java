@@ -8,6 +8,7 @@ public class Preferes {
     private static final String CURYER="curer";
     private static final String IP_adres="ip_adres";
     private static final String PORT="port";
+    private static final String DAY="day";
     private static final String SELECT="select";
     private static final String onKKT="kkt";
 
@@ -44,4 +45,12 @@ public class Preferes {
     public static int getSelect(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(SELECT, 0);
     }
+    public static void setDay(Context context){
+        int day = getDay(context);
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(DAY,day++).apply();
+    }
+    public static int getDay(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt(DAY,1);
+    }
+
 }

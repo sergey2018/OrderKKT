@@ -182,7 +182,15 @@ public class GoodsFragment extends Fragment {
     @OnClick(R.id.saleKatr)
     void Kart(){
         type = "Оплата картой";
-        new KKTTask().execute(type);
+        if(getFalse()) {
+            new KKTTask().execute(type);
+        }
+        else {
+            FragmentManager manager = getFragmentManager();
+            NoteDialogFragment dialogFragment = new NoteDialogFragment();
+            dialogFragment.setTargetFragment(GoodsFragment.this, 1);
+            dialogFragment.show(manager, "note");
+        }
     }
 
     private boolean getFalse() {
@@ -216,6 +224,10 @@ public class GoodsFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             mDialog.dismiss();
+            if(OrderLab.getInstance(getActivity()).getError()){
+                return;
+            }
+
             if (getFalse()) {
                 OrderLab.getInstance(getActivity()).sales(id, type);
                 getActivity().finish();

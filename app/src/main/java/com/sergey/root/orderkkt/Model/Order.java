@@ -11,11 +11,15 @@ public class Order {
 
     private String Adress;
     private int mGoods;
+    private String mName;
+    private double mPrice;
     private Date mDate;
     private int mStatus;
     private int count;
     private String mPhone;
     private String mNote;
+    private double mQuantity;
+    private String mCode;
 
     public String getAdress() {
         return Adress;
@@ -92,5 +96,40 @@ public class Order {
     public String getDateText(){
         DateFormat format = new DateFormat();
         return (String) format.format("dd.MM.yyyy",mDate);
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public double getPrice() {
+        return mPrice;
+    }
+
+    public void setPrice(double price) {
+        mPrice = price;
+    }
+
+    public double getQuantity() {
+        return mQuantity;
+    }
+
+    public void setQuantity(double quantity) {
+        mQuantity = quantity;
+    }
+    public double Summ(){
+        return mQuantity * mPrice;
+    }
+
+    public String getCode() {
+        return mCode;
+    }
+
+    public void setCode(String code) {
+        mCode = code;
     }
 }

@@ -76,10 +76,12 @@ public class Yandex {
             if(getFile(direct)) {
                 mClient.makeFolder(direct + "/" + dir);
                 mClient.makeFolder(direct + "/" + dir + "/Загрузка");
+                mClient.makeFolder(direct + "/" + dir + "/Выгрузка");
             }
             else {
                 mClient.makeFolder(direct + "/" + dir);
                 mClient.makeFolder(direct + "/" + dir + "/Загрузка");
+                mClient.makeFolder(direct + "/" + dir + "/Выгрузка");
             }
 
         } catch (ServerIOException e) {

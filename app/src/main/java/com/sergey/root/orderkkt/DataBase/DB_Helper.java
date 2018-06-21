@@ -21,6 +21,7 @@ public class DB_Helper extends SQLiteOpenHelper {
         db.execSQL("create table " + dbShema.ORDER.NAME + " ("+
             "id integer primary key autoincrement, "+
                 dbShema.ORDER.Cols.ACCT + " text, "+
+                dbShema.ORDER.Cols.DAY + " integer, "+
                 dbShema.ORDER.Cols.DATE + " long, "+
                 dbShema.ORDER.Cols.GOODS + " integer, "+
                 dbShema.ORDER.Cols.ADRESS + " text, " +

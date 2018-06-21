@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation project(path: ':FptrServiceAndroid')
     implementation 'com.android.support:support-v13:27.1.1'
+    implementation project(':poi-3.17')
 }
 repositories {
     jcenter()

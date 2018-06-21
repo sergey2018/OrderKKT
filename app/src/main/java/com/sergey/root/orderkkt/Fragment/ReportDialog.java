@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.sergey.root.orderkkt.DataBase.OrderLab;
+import com.sergey.root.orderkkt.Preferes;
 
 public class ReportDialog extends DialogFragment {
     @NonNull
@@ -19,24 +20,11 @@ public class ReportDialog extends DialogFragment {
         return new AlertDialog.Builder(getActivity()).setTitle("Закрытие смены").setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                new ReportTask().execute();
+                Intent intent = new Intent();
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,intent);
             }
         }).setNegativeButton(android.R.string.cancel,null).create();
     }
 
-    private class ReportTask extends AsyncTask<Void,Void,Void>{
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            OrderLab.getInstance(getActivity()).zreport();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Intent intent = new Intent();
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,intent);
-        }
-    }
 }

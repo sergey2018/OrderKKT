@@ -7,8 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.RequiresApi;
+import android.text.format.DateFormat;
 
+import com.sergey.root.orderkkt.CursorWrappes.ExelOrderWrapper;
 import com.sergey.root.orderkkt.CursorWrappes.GoodsWrapper;
 import com.sergey.root.orderkkt.CursorWrappes.OrderWrappes;
 import com.sergey.root.orderkkt.DataBase.dbShema.GOODS;
@@ -20,6 +23,11 @@ import com.sergey.root.orderkkt.Model.Goods;
 import com.sergey.root.orderkkt.Model.Order;
 import com.sergey.root.orderkkt.Preferes;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,6 +37,7 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -44,6 +53,7 @@ public class OrderLab {
     private static  OrderLab ourInstance;
     private SQLiteDatabase mHelper;
     private Context mContext;
+    private int day;
     private boolean isON = false;
     private KKT mKKT;
 
@@ -61,6 +71,7 @@ public class OrderLab {
         mHelper = new DB_Helper(context.getApplicationContext()).getWritableDatabase();
         mContext = context;
         int kkt = Preferes.getSelect(context);
+        day = Preferes.getDay(context);
         switch (kkt){
             case 1: mKKT = new ShtrihPrintKKT();
             mKKT.init(context);
@@ -141,6 +152,7 @@ public class OrderLab {
         ContentValues values = new ContentValues();
         values.put(ORDER.Cols.ACCT,order.getAcct().toString());
         values.put(ORDER.Cols.GOODS,order.getGoods());
+        values.put(ORDER.Cols.DAY,day);
         values.put(ORDER.Cols.DATE,order.getDate().getTime());
         values.put(ORDER.Cols.PHONE,order.getPhone());
         values.put(ORDER.Cols.ADRESS,order.getAdress());
@@ -164,6 +176,7 @@ public class OrderLab {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void setXML(File file){
         try {
+            day = Preferes.getDay(mContext);
             InputStream  stream = new FileInputStream(file);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -265,5 +278,81 @@ public class OrderLab {
     }
     public void zreport(){
         mKKT.ZReport();
+    }
+    public void createExel(int day){
+        ArrayList<Order> orders = new ArrayList<>();
+        String table = ORDER.NAME + " inner join " + GOODS.NAME + " on " + ORDER.Cols.GOODS + " = "+GOODS.NAME+"._id";
+        Cursor cursor = getQuery(false,null,null,ORDER.Cols.DAY+" = ?",new String[]{String.valueOf(day)},null,null);
+        ExelOrderWrapper value = new  ExelOrderWrapper(cursor);
+        try{
+            if(value.getCount() == 0){
+                return;
+            }
+            value.moveToFirst();
+            while (!value.isAfterLast()){
+                orders.add(value.getOrder2());
+                value.moveToNext();
+            }
+        }finally {
+            value.close();
+        }
+        Workbook book = new HSSFWorkbook();
+        Sheet sheet = book.createSheet("Продажи");
+        Row rows = sheet.createRow(0);
+
+        Cell cell = rows.createCell(0);
+        cell.setCellValue("Код");
+        Cell cell1 = rows.createCell(1);
+        cell.setCellValue("Наименование");
+        Cell cell2 = rows.createCell(2);
+        cell.setCellValue("Количесво");
+        Cell cell3 = rows.createCell(3);
+        cell.setCellValue("Цена");
+        Cell cell4 = rows.createCell(4);
+        cell.setCellValue("Сумма");
+        Cell cell5 = rows.createCell(5);
+        cell.setCellValue("Примечание");
+        for (int i = 1; i<orders.size(); i++){
+            Row row = sheet.createRow(i);
+            row.createCell(0).setCellValue(orders.get(i-1).getCode());
+            row.createCell(1).setCellValue(orders.get(i-1).getName());
+            row.createCell(2).setCellValue(orders.get(i-1).getQuantity());
+            row.createCell(3).setCellValue(orders.get(i-1).getPrice());
+            row.createCell(4).setCellValue(orders.get(i-1).getNote());
+        }
+        createDir();
+        File file = new File(Environment.getExternalStorageDirectory(), "Order");
+        File file1 = new File(file,"Продажи "+getDate(new Date())+".xls");
+        FileOutputStream stream = null;
+
+        try {
+            stream = new FileOutputStream(file1);
+            book.write(stream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (null != stream)
+                    stream.close();
+            } catch (Exception ex) {
+            }
+        }
+
+
+
+
+}
+    private static String getDate(Date date) {
+        DateFormat format = new DateFormat();
+        return (String) format.format("dd_MM_yyyy",date);
+    }
+    private void createDir(){
+        File file = new File(Environment.getExternalStorageDirectory(), "Order");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
     }
 }

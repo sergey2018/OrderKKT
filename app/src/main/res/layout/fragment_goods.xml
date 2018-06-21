@@ -60,14 +60,14 @@
         android:layout_marginRight="163dp"
         android:layout_marginStart="163dp"
         android:layout_marginTop="40dp"
-        android:textAlignment="center"
         android:text="Итого: 3000 рублей"
+        android:textAlignment="center"
         android:textColor="@color/sum"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/goods_list"
-        app:layout_constraintVertical_bias="0.51"/>
+        app:layout_constraintVertical_bias="0.625"/>
 
 </android.support.constraint.ConstraintLayout>

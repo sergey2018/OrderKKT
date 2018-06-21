@@ -1,7 +1,9 @@
 package com.sergey.root.orderkkt.Fragment;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,7 @@ import com.sergey.root.orderkkt.Adapter.OrderAdapter;
 import com.sergey.root.orderkkt.DataBase.OrderLab;
 import com.sergey.root.orderkkt.GoodsClickListener;
 import com.sergey.root.orderkkt.Model.Order;
+import com.sergey.root.orderkkt.Preferes;
 import com.sergey.root.orderkkt.R;
 
 import java.util.ArrayList;
@@ -49,6 +52,15 @@ public class OrderFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+       if(requestCode == 3 && resultCode == Activity.RESULT_OK){
+         new ReportTask().execute();
+
+       }
+    }
+
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mStatus = getArguments().getInt(ARG_STATSUS);
@@ -65,7 +77,7 @@ public class OrderFragment extends Fragment {
 
 
     private void update(){
-        final ArrayList<Order> orders = OrderLab.getInstance(getActivity()).getOrder(mStatus);
+        ArrayList<Order> orders = OrderLab.getInstance(getActivity()).getOrder(mStatus);
         if(orders == null)return;
         if(adapter == null){
             adapter = new OrderAdapter(orders,getActivity());
@@ -80,8 +92,8 @@ public class OrderFragment extends Fragment {
         mOrderView.addOnItemTouchListener(new GoodsClickListener(getActivity(), new GoodsClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(orders.get(position).getStatus() == 0){
-                    UUID id = orders.get(position).getAcct();
+                if(adapter.getOrders().get(position).getStatus() == 0){
+                    UUID id = adapter.getOrders().get(position).getAcct();
                     Intent intent = GoodsActivity.newIntent(getActivity(),id);
                     startActivity(intent);
                 }
@@ -133,6 +145,23 @@ public class OrderFragment extends Fragment {
                 dialog.show(manager,"report");
                 default:
                     return super.onOptionsItemSelected(item);
+        }
+    }
+    private class ReportTask extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            OrderLab.getInstance(getActivity()).zreport();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if(OrderLab.getInstance(getActivity()).getError()) return;
+            Preferes.setDay(getActivity());
+
+
         }
     }
 }
