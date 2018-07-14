@@ -206,18 +206,14 @@ public class OrderLab {
 
                         goods.setTax(Integer.parseInt(element.getAttribute("tax")));
                         goods.setCode(element.getAttribute("code"));
-                        int d = getDouble(goods);
-                        if(d == 0) {
+
                             mHelper.insert(GOODS.NAME, null, addGoods(goods));
 
                             int id = getId();
                             order.setGoods(id);
                             mHelper.insert(ORDER.NAME, null, addOrder(order));
-                        }
-                        else {
-                            order.setGoods(d);
-                            mHelper.insert(ORDER.NAME, null, addOrder(order));
-                        }
+                        
+
 
                     }
                 }
@@ -274,10 +270,13 @@ public class OrderLab {
         return mKKT.getDevises();
     }
     public boolean getError(){
-        return mKKT.getError();
+        if(isON )return false;
+      else  return mKKT.getError();
     }
     public void zreport(){
-        mKKT.ZReport();
+        if(!isON){
+            mKKT.ZReport();
+        }
     }
     public void createExel(int day){
         ArrayList<Order> orders = new ArrayList<>();

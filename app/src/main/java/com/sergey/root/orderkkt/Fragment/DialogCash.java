@@ -83,11 +83,12 @@ public class DialogCash extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 double opl = Double.parseDouble(textOpl.getText().toString());
-                if(opl>=summ){
+                if(opl>=summ || opl == 0){
                     Intent intent = new Intent();
                     intent.putExtra(EXTRA_SUM,summ);
                     getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,intent);
                 }
+
             }
         }).setNegativeButton(android.R.string.cancel,null).create();
     }
