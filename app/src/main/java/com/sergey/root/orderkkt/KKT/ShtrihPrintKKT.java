@@ -70,6 +70,7 @@ public class ShtrihPrintKKT implements KKT {
         } catch (JposException e) {
             mError = true;
             Description = e.toString();
+            close();
             e.printStackTrace();
 
         }

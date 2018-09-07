@@ -1,5 +1,9 @@
 package com.sergey.root.orderkkt.Model;
 
+import android.content.ContentValues;
+
+import com.sergey.root.orderkkt.DataBase.dbShema;
+
 public class Goods {
     private int mId;
     private String mName;
@@ -78,5 +82,15 @@ public class Goods {
 
     public void setCode(String code) {
         mCode = code;
+    }
+
+    public ContentValues getContentValue(){
+        ContentValues values = new ContentValues();
+        values.put(dbShema.GOODS.Cols.NAME,mName);
+        values.put(dbShema.GOODS.Cols.PRICE,mPrice);
+        values.put(dbShema.GOODS.Cols.CODE,mCode);
+        values.put(dbShema.GOODS.Cols.QUANT,mQuantity);
+        values.put(dbShema.GOODS.Cols.TAX,Tax);
+        return values;
     }
 }

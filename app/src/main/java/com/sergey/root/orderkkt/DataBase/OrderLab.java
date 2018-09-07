@@ -23,11 +23,6 @@ import com.sergey.root.orderkkt.Model.Goods;
 import com.sergey.root.orderkkt.Model.Order;
 import com.sergey.root.orderkkt.Preferes;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -139,28 +134,7 @@ public class OrderLab {
         Cursor cursor = mHelper.query(distinct, table,colms,where,arg,group,null,order,null);
         return cursor;
     }
-    private ContentValues addGoods(Goods goods){
-        ContentValues values = new ContentValues();
-        values.put(GOODS.Cols.NAME,goods.getName());
-        values.put(GOODS.Cols.PRICE,goods.getPrice());
-        values.put(GOODS.Cols.CODE,goods.getCode());
-        values.put(GOODS.Cols.QUANT,goods.getQuantity());
-        values.put(GOODS.Cols.TAX,goods.getTax());
-        return values;
-    }
-    private ContentValues addOrder(Order order){
-        ContentValues values = new ContentValues();
-        values.put(ORDER.Cols.ACCT,order.getAcct().toString());
-        values.put(ORDER.Cols.GOODS,order.getGoods());
-        values.put(ORDER.Cols.DAY,day);
-        values.put(ORDER.Cols.DATE,order.getDate().getTime());
-        values.put(ORDER.Cols.PHONE,order.getPhone());
-        values.put(ORDER.Cols.ADRESS,order.getAdress());
-        values.put(ORDER.Cols.STATUS,order.getStatus());
-        values.put(ORDER.Cols.CONTACT,order.getContact());
-        values.put(ORDER.Cols.NOTE,order.getNote());
-        return values;
-    }
+
     public void sales(UUID id, String type){
       ContentValues values = new ContentValues();
       values.put(ORDER.Cols.STATUS,1);
@@ -207,11 +181,11 @@ public class OrderLab {
                         goods.setTax(Integer.parseInt(element.getAttribute("tax")));
                         goods.setCode(element.getAttribute("code"));
 
-                            mHelper.insert(GOODS.NAME, null, addGoods(goods));
+                            mHelper.insert(GOODS.NAME, null, goods.getContentValue());
 
                             int id = getId();
                             order.setGoods(id);
-                            mHelper.insert(ORDER.NAME, null, addOrder(order));
+                            mHelper.insert(ORDER.NAME, null, order.getContenValue(day));
                         
 
 
@@ -241,20 +215,6 @@ public class OrderLab {
         }
     }
 
-    private int getDouble(Goods goods){
-        Cursor cursor = getQuery(false,GOODS.NAME,new String[]{"_id"},GOODS.Cols.NAME + " = ? ",new String[]{goods.getName()},null,null);
-        try {
-            if (cursor.getCount() == 0){
-                return 0;
-            }
-            cursor.moveToFirst();
-            return cursor.getInt(cursor.getColumnIndex("_id"));
-        }
-        finally {
-            cursor.close();
-        }
-    }
-
     public void sale(ArrayList<Goods> goods,String type,double sum){
         if(!isON){
             mKKT.Sale(goods,type,sum);
@@ -278,72 +238,7 @@ public class OrderLab {
             mKKT.ZReport();
         }
     }
-    public void createExel(int day){
-        ArrayList<Order> orders = new ArrayList<>();
-        String table = ORDER.NAME + " inner join " + GOODS.NAME + " on " + ORDER.Cols.GOODS + " = "+GOODS.NAME+"._id";
-        Cursor cursor = getQuery(false,null,null,ORDER.Cols.DAY+" = ?",new String[]{String.valueOf(day)},null,null);
-        ExelOrderWrapper value = new  ExelOrderWrapper(cursor);
-        try{
-            if(value.getCount() == 0){
-                return;
-            }
-            value.moveToFirst();
-            while (!value.isAfterLast()){
-                orders.add(value.getOrder2());
-                value.moveToNext();
-            }
-        }finally {
-            value.close();
-        }
-        Workbook book = new HSSFWorkbook();
-        Sheet sheet = book.createSheet("Продажи");
-        Row rows = sheet.createRow(0);
 
-        Cell cell = rows.createCell(0);
-        cell.setCellValue("Код");
-        Cell cell1 = rows.createCell(1);
-        cell.setCellValue("Наименование");
-        Cell cell2 = rows.createCell(2);
-        cell.setCellValue("Количесво");
-        Cell cell3 = rows.createCell(3);
-        cell.setCellValue("Цена");
-        Cell cell4 = rows.createCell(4);
-        cell.setCellValue("Сумма");
-        Cell cell5 = rows.createCell(5);
-        cell.setCellValue("Примечание");
-        for (int i = 1; i<orders.size(); i++){
-            Row row = sheet.createRow(i);
-            row.createCell(0).setCellValue(orders.get(i-1).getCode());
-            row.createCell(1).setCellValue(orders.get(i-1).getName());
-            row.createCell(2).setCellValue(orders.get(i-1).getQuantity());
-            row.createCell(3).setCellValue(orders.get(i-1).getPrice());
-            row.createCell(4).setCellValue(orders.get(i-1).getNote());
-        }
-        createDir();
-        File file = new File(Environment.getExternalStorageDirectory(), "Order");
-        File file1 = new File(file,"Продажи "+getDate(new Date())+".xls");
-        FileOutputStream stream = null;
-
-        try {
-            stream = new FileOutputStream(file1);
-            book.write(stream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                if (null != stream)
-                    stream.close();
-            } catch (Exception ex) {
-            }
-        }
-
-
-
-
-}
     private static String getDate(Date date) {
         DateFormat format = new DateFormat();
         return (String) format.format("dd_MM_yyyy",date);

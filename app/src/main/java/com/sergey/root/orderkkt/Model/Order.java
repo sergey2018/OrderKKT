@@ -1,6 +1,9 @@
 package com.sergey.root.orderkkt.Model;
 
+import android.content.ContentValues;
 import android.text.format.DateFormat;
+
+import com.sergey.root.orderkkt.DataBase.dbShema;
 
 import java.util.Date;
 import java.util.UUID;
@@ -131,5 +134,19 @@ public class Order {
 
     public void setCode(String code) {
         mCode = code;
+    }
+
+    public ContentValues getContenValue(int day){
+        ContentValues values = new ContentValues();
+        values.put(dbShema.ORDER.Cols.ACCT,mAcct.toString());
+        values.put(dbShema.ORDER.Cols.GOODS,mGoods);
+        values.put(dbShema.ORDER.Cols.DAY,day);
+        values.put(dbShema.ORDER.Cols.DATE,mDate.getTime());
+        values.put(dbShema.ORDER.Cols.PHONE,mPhone);
+        values.put(dbShema.ORDER.Cols.ADRESS,Adress);
+        values.put(dbShema.ORDER.Cols.STATUS,mStatus);
+        values.put(dbShema.ORDER.Cols.CONTACT,mContact);
+        values.put(dbShema.ORDER.Cols.NOTE,mNote);
+        return values;
     }
 }

@@ -33,6 +33,7 @@
         <activity android:name=".Activity.GoodsActivity"
             android:theme="@style/MyMaterialTheme1"/>
         <activity android:name=".Activity.SettinsActivity"/>
+        <activity android:name=".tcp.TcpDeviceSearchActivity"/>
 
         <meta-data
             android:name="preloaded_fonts"
