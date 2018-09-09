@@ -152,6 +152,7 @@ public class OrderFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             OrderLab.getInstance(getActivity()).zreport();
+            OrderLab.getInstance(getActivity()).createFile(Preferes.getDay(getActivity()));
             return null;
         }
 

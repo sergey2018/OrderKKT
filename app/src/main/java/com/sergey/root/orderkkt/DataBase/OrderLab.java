@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.text.format.DateFormat;
+import android.util.Xml;
 
 import com.sergey.root.orderkkt.CursorWrappes.ExelOrderWrapper;
 import com.sergey.root.orderkkt.CursorWrappes.GoodsWrapper;
@@ -28,13 +29,17 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xmlpull.v1.XmlSerializer;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -239,14 +244,71 @@ public class OrderLab {
         }
     }
 
+    public void createFile(int day){
+
+        ArrayList<Order> list = new ArrayList<>();
+        String table = ORDER.NAME + " inner join " + GOODS.NAME + " on " + ORDER.Cols.GOODS + " = "+GOODS.NAME+"._id";
+        Cursor cursor = getQuery(false,table,new String[]{GOODS.Cols.CODE,GOODS.Cols.NAME,GOODS.Cols.PRICE,GOODS.Cols.QUANT},ORDER.Cols.DAY + " = ?",new String[]{String.valueOf(day)},null,null);
+      ExelOrderWrapper value = new ExelOrderWrapper(cursor);
+        try{
+            if(value.getCount() == 0){
+                return;
+            }
+            value.moveToFirst();
+            while (!value.isAfterLast()){
+                list.add(value.getOrder2());
+                value.moveToNext();
+            }
+        }finally {
+            value.close();
+        }
+        XmlSerializer serializer = Xml.newSerializer();
+        StringWriter writer = new StringWriter();
+        try {
+            serializer.setOutput(writer);
+            serializer.startDocument("UTF-8", true);
+            serializer.startTag("", "Orders");
+            for ( Order order:list
+                 ) {
+                serializer.startTag("","order");
+                serializer.attribute("","code",order.getCode());
+                serializer.attribute("","name",order.getName());
+                serializer.attribute("","price",String.valueOf(order.getPrice()));
+                serializer.attribute("","quant",String.valueOf(order.getQuantity()));
+                serializer.endTag("","order");
+
+            }
+            serializer.endTag("","Orders");
+            serializer.endDocument();
+
+        }
+        catch (Exception e) {
+        throw new RuntimeException(e);
+    }
+    File file = new File(createDir().getAbsoluteFile()+"/outFile.xml");
+        String xml = writer.toString();
+        try {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+        // пишем данны
+            bw.write(xml);
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // закрываем поток
+
+
+
+}
     private static String getDate(Date date) {
         DateFormat format = new DateFormat();
-        return (String) format.format("dd_MM_yyyy",date);
+        return (String) format.format("yyyy-MM-dd",date);
     }
-    private void createDir(){
+    private File createDir(){
         File file = new File(Environment.getExternalStorageDirectory(), "Order");
         if (!file.exists()) {
             file.mkdirs();
         }
+        return file;
     }
 }

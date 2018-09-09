@@ -11,6 +11,8 @@ import com.yandex.disk.rest.RestClient;
 import com.yandex.disk.rest.exceptions.NetworkIOException;
 import com.yandex.disk.rest.exceptions.ServerException;
 import com.yandex.disk.rest.exceptions.ServerIOException;
+import com.yandex.disk.rest.exceptions.WrongMethodException;
+import com.yandex.disk.rest.json.Link;
 import com.yandex.disk.rest.json.Resource;
 
 import java.io.File;
@@ -94,6 +96,22 @@ public class Yandex {
         try {
             mClient.delete(path,true);
         } catch (ServerIOException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void upLoadFile( File f, ProgressListener listener){
+        try {
+            Link link = mClient.getUploadLink(direct+"/"+dir+"/Выгрузка"+"/"+f.getName(),true);
+            mClient.uploadFile(link,true,f,listener);
+        } catch (ServerIOException e) {
+            e.printStackTrace();
+        } catch (WrongMethodException e) {
+            e.printStackTrace();
+        } catch (NetworkIOException e) {
+            e.printStackTrace();
+        } catch (ServerException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

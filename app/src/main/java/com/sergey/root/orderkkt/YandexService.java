@@ -68,8 +68,22 @@ public class YandexService extends IntentService implements ProgressListener{
         if(!isNetworkAvailableAndConnected()){
             return;
         }
-        File file1 = new File(file.getAbsoluteFile()+"/goods.xml");
         Yandex yandex  = new Yandex(this);
+        ArrayList<File> mFiles = new ArrayList<>();
+        File[]files = file.listFiles();
+        for(File f : files){
+            if(f.isFile()){
+                mFiles.add(f);
+            }
+        }
+        if(mFiles.size() == 0){
+            return;
+        }
+        for(File f:mFiles){
+            yandex.upLoadFile(f,YandexService.this);
+            f.delete();
+        }
+        File file1 = new File(file.getAbsoluteFile()+"/goods.xml");
         ArrayList<ListItem> items = yandex.getItem();
         if(items.size() == 0){
             return;
@@ -78,7 +92,7 @@ public class YandexService extends IntentService implements ProgressListener{
         yandex.dowloadsFile(item.getName(),file1,YandexService.this);
         OrderLab.getInstance(this).setXML(file1);
         yandex.delete(item.getPath());
-        Resources r = getResources();
+
         Intent i = MainActivity.newIntent(this);
         PendingIntent pi = PendingIntent.getActivity(this,0,i,0);
         Notification notification = new NotificationCompat.Builder(this).setTicker("Данные обновлены")
