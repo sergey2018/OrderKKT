@@ -165,10 +165,7 @@ public class GoodsFragment extends Fragment {
     void OnClick() {
         type = "Оплата наличными";
        if(getFalse()){
-           FragmentManager manager = getFragmentManager();
-           DialogCash cash = DialogCash.newIntens(summ());
-           cash.setTargetFragment(GoodsFragment.this,2);
-           cash.show(manager,"cash");
+            new KKTTask().execute(type);
        }
        else {
            FragmentManager manager = getFragmentManager();

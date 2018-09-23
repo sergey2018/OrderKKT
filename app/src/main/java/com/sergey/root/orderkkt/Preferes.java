@@ -46,8 +46,8 @@ public class Preferes {
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(SELECT, 0);
     }
     public static void setDay(Context context){
-        int day = getDay(context);
-        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(DAY,day++).apply();
+        int day = getDay(context)+1;
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt(DAY,day).apply();
     }
     public static int getDay(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(DAY,1);

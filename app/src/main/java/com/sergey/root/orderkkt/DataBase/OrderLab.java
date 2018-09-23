@@ -85,8 +85,9 @@ public class OrderLab {
     public ArrayList<Order> getOrder(int status){
         ArrayList<Order> list = new ArrayList<>();
         String table = ORDER.NAME;
+        int day = Preferes.getDay(mContext);
         String [] colums = new String[]{ORDER.Cols.ACCT,ORDER.Cols.PHONE,ORDER.Cols.NOTE,ORDER.Cols.CONTACT,ORDER.Cols.ADRESS,"SUM("+ORDER.Cols.STATUS+") AS "+ORDER.Cols.STATUS,"COUNT("+ORDER.Cols.STATUS+") AS cour",ORDER.Cols.DATE};
-        Cursor cursor = getQuery(true,table,colums,ORDER.Cols.STATUS+" = ?",new String[]{String.valueOf(status)},ORDER.Cols.ACCT,ORDER.Cols.DATE+" DESC");
+        Cursor cursor = getQuery(true,table,colums,ORDER.Cols.STATUS+" = ? AND "+ORDER.Cols.DAY+"=?",new String[]{String.valueOf(status),String.valueOf(day)},ORDER.Cols.ACCT,ORDER.Cols.DATE+" DESC");
         OrderWrappes value = new OrderWrappes(cursor);
         try{
             if(value.getCount() == 0){
@@ -244,11 +245,17 @@ public class OrderLab {
         }
     }
 
+    public void XReport(){
+        if(!isON){
+            mKKT.XReport();
+        }
+    }
     public void createFile(int day){
+
 
         ArrayList<Order> list = new ArrayList<>();
         String table = ORDER.NAME + " inner join " + GOODS.NAME + " on " + ORDER.Cols.GOODS + " = "+GOODS.NAME+"._id";
-        Cursor cursor = getQuery(false,table,new String[]{GOODS.Cols.CODE,GOODS.Cols.NAME,GOODS.Cols.PRICE,GOODS.Cols.QUANT},ORDER.Cols.DAY + " = ?",new String[]{String.valueOf(day)},null,null);
+        Cursor cursor = getQuery(false,table,null,ORDER.Cols.DAY + " = ?",new String[]{String.valueOf(day)},null,null);
       ExelOrderWrapper value = new ExelOrderWrapper(cursor);
         try{
             if(value.getCount() == 0){
@@ -262,22 +269,52 @@ public class OrderLab {
         }finally {
             value.close();
         }
+
         XmlSerializer serializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
         try {
             serializer.setOutput(writer);
             serializer.startDocument("UTF-8", true);
             serializer.startTag("", "Orders");
-            for ( Order order:list
-                 ) {
-                serializer.startTag("","order");
-                serializer.attribute("","code",order.getCode());
-                serializer.attribute("","name",order.getName());
-                serializer.attribute("","price",String.valueOf(order.getPrice()));
-                serializer.attribute("","quant",String.valueOf(order.getQuantity()));
-                serializer.endTag("","order");
+            UUID id = null;
+            boolean flag = false;
+            for ( Order order:list) {
+                if (order.getAcct().equals(id)){
+                    serializer.startTag("", "Good");
+                serializer.attribute("", "code", order.getCode());
+                serializer.attribute("", "name", order.getName());
+                serializer.attribute("", "price", String.valueOf(order.getPrice()));
+                serializer.attribute("", "quant", String.valueOf(order.getQuantity()));
+                serializer.attribute("","status",String.valueOf(order.getStatus()));
+                serializer.attribute("","note",order.getNote());
+                serializer.endTag("", "Good");
+            }
+            else {
+                    if(flag){
+                        serializer.endTag("","Goods");
+                        serializer.endTag("","Order");
+                        flag = false;
+                    }
+                    id = order.getAcct();
+                    serializer.startTag("","Order");
+                    serializer.attribute("","client",order.getContact());
+                    serializer.attribute("","adress",order.getAdress());
+                    serializer.attribute("","phone",order.getPhone());
+                    serializer.startTag("","Goods");
+                    serializer.startTag("", "Good");
+                    serializer.attribute("", "code", order.getCode());
+                    serializer.attribute("", "name", order.getName());
+                    serializer.attribute("", "price", String.valueOf(order.getPrice()));
+                    serializer.attribute("", "quant", String.valueOf(order.getQuantity()));
+                    serializer.attribute("","status",String.valueOf(order.getStatus()));
+                    serializer.attribute("","note",order.getNote());
+                    serializer.endTag("", "Good");
+                    flag = true;
+                }
 
             }
+            serializer.endTag("","Goods");
+            serializer.endTag("","Order");
             serializer.endTag("","Orders");
             serializer.endDocument();
 

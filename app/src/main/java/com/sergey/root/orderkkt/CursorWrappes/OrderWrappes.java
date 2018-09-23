@@ -28,7 +28,9 @@ public class OrderWrappes extends CursorWrapper {
         order.setStatus(getInt(getColumnIndex(dbShema.ORDER.Cols.STATUS)));
         order.setDate(new Date(getLong(getColumnIndex(dbShema.ORDER.Cols.DATE))));
         order.setNote(getString(getColumnIndex(dbShema.ORDER.Cols.NOTE)));
-        order.setCount(getInt(getColumnIndex("cour")));
+        if(getColumnIndex("cour") != -1) {
+            order.setCount(getInt(getColumnIndex("cour")));
+        }
         return order;
     }
 }

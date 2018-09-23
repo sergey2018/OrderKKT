@@ -15,7 +15,7 @@ public class ExelOrderWrapper extends OrderWrappes {
         super(cursor);
     }
     public Order getOrder2(){
-        Order order = new Order();
+        Order order = getOrder();
         order.setName(getString(getColumnIndex(dbShema.GOODS.Cols.NAME)));
         order.setCode(getString(getColumnIndex(dbShema.GOODS.Cols.CODE)));
         order.setPrice(getDouble(getColumnIndex(dbShema.GOODS.Cols.PRICE)));

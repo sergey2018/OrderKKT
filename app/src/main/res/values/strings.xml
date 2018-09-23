@@ -15,6 +15,7 @@
     <string name="input_cash">Оплата</string>
     <string name="curer">Введите имя курьера</string>
     <string name="phone_call">Позвонить</string>
+    <string name="x_report">X-отчет</string>
     <string-array name="KKT">
         <item>Нет</item>
         <item>Штрих-М (LAN)</item>

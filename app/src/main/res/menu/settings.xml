@@ -7,6 +7,11 @@
         android:icon="@drawable/ic_today_black_24dp"
         app:showAsAction="withText|ifRoom"/>
     <item
+        android:title="@string/x_report"
+        android:id="@+id/x_report"
+        android:icon="@drawable/ic_today_black_24dp"
+        app:showAsAction="withText|ifRoom"/>
+    <item
         android:title="@string/settings"
         android:id="@+id/settigs"
         android:icon="@drawable/ic_settings_black_24dp"

@@ -2,6 +2,7 @@ package com.sergey.root.orderkkt.Fragment;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ public class OrderFragment extends Fragment {
     RecyclerView mOrderView;
     Unbinder unbinder;
     private int mStatus = 0;
+    private ProgressDialog mDialog;
     private static final String ARG_STATSUS = "status";
     private OrderAdapter adapter;
     public OrderFragment() {
@@ -107,6 +109,9 @@ public class OrderFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
         unbinder = ButterKnife.bind(this, view);
         mOrderView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mDialog = new ProgressDialog(getActivity());
+        mDialog.setMessage("Передача в кассовый апарат");
+        mDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         getActivity().setTitle("Заказы");
         update();
         setHasOptionsMenu(true);
@@ -143,6 +148,9 @@ public class OrderFragment extends Fragment {
                 ReportDialog dialog = new ReportDialog();
                 dialog.setTargetFragment(OrderFragment.this,3);
                 dialog.show(manager,"report");
+                return true;
+            case R.id.x_report:
+                new ReportXTask().execute();
                 default:
                     return super.onOptionsItemSelected(item);
         }
@@ -161,8 +169,31 @@ public class OrderFragment extends Fragment {
             super.onPostExecute(aVoid);
             if(OrderLab.getInstance(getActivity()).getError()) return;
             Preferes.setDay(getActivity());
+            update();
 
 
         }
+    }
+    private class ReportXTask extends AsyncTask<Void,Void,Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            OrderLab.getInstance(getActivity()).XReport();
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mDialog.dismiss();
+        }
+
+
     }
 }

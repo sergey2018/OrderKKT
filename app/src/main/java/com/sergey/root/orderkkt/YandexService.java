@@ -76,12 +76,11 @@ public class YandexService extends IntentService implements ProgressListener{
                 mFiles.add(f);
             }
         }
-        if(mFiles.size() == 0){
-            return;
-        }
-        for(File f:mFiles){
-            yandex.upLoadFile(f,YandexService.this);
-            f.delete();
+        if(mFiles.size()!=0) {
+            for (File f : mFiles) {
+                yandex.upLoadFile(f, YandexService.this);
+                f.delete();
+            }
         }
         File file1 = new File(file.getAbsoluteFile()+"/goods.xml");
         ArrayList<ListItem> items = yandex.getItem();
