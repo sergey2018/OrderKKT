@@ -3,7 +3,10 @@ package com.sergey.root.orderkkt.Fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,6 +30,7 @@ import com.sergey.root.orderkkt.GoodsClickListener;
 import com.sergey.root.orderkkt.Model.Order;
 import com.sergey.root.orderkkt.Preferes;
 import com.sergey.root.orderkkt.R;
+import com.sergey.root.orderkkt.YandexService;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -49,6 +53,12 @@ public class OrderFragment extends Fragment {
     private ProgressDialog mDialog;
     private static final String ARG_STATSUS = "status";
     private OrderAdapter adapter;
+    private BroadcastReceiver mUpdate = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            update();
+        }
+    };
     public OrderFragment() {
         // Required empty public constructor
     }
@@ -119,9 +129,22 @@ public class OrderFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(YandexService.SHOW_ACTION);
+        getActivity().registerReceiver(mUpdate,filter);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         update();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().unregisterReceiver(mUpdate);
     }
 
     @Override

@@ -41,6 +41,7 @@ public class YandexService extends IntentService implements ProgressListener{
     }
 
     private static final long POLL_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);
+    public static final  String SHOW_ACTION ="com.sergey.root.orderkkt.SHOW_ACTION";
     /**
      * Starts this service to perform action Foo with the given parameters. If
      * the service is already performing a task this action will be queued.
@@ -104,6 +105,7 @@ public class YandexService extends IntentService implements ProgressListener{
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
         notificationManager.notify(0, notification);
+        sendBroadcast(new Intent(SHOW_ACTION));
 
     }
 
