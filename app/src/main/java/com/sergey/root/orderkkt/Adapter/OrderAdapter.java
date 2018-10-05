@@ -117,6 +117,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
                 mStatus.setText("Доставлен");
                 mStatus.setTextColor(Color.parseColor("#00ff00"));
             }
+            else if(order.getStatus() == 2*order.getCount()){
+                mStatus.setText("Отменен");
+                mStatus.setTextColor(Color.parseColor("#ff0000"));
+            }
             else {
                 mStatus.setText("Частично доставлен");
                 mStatus.setTextColor(Color.parseColor("#ffff00"));

@@ -85,9 +85,18 @@ public class OrderLab {
     public ArrayList<Order> getOrder(int status){
         ArrayList<Order> list = new ArrayList<>();
         String table = ORDER.NAME;
-        int day = Preferes.getDay(mContext);
+        String where = null;
+        String [] arg = null;
+        if(status == 0){
+            where = ORDER.Cols.STATUS+" = ?";
+            arg = new String[]{"0"};
+        }
+        else {
+            where = ORDER.Cols.STATUS+" > ?";
+            arg = new String[]{"0"};
+        }
         String [] colums = new String[]{ORDER.Cols.ACCT,ORDER.Cols.PHONE,ORDER.Cols.NOTE,ORDER.Cols.CONTACT,ORDER.Cols.ADRESS,"SUM("+ORDER.Cols.STATUS+") AS "+ORDER.Cols.STATUS,"COUNT("+ORDER.Cols.STATUS+") AS cour",ORDER.Cols.DATE};
-        Cursor cursor = getQuery(true,table,colums,ORDER.Cols.STATUS+" = ? AND "+ORDER.Cols.DAY+"=?",new String[]{String.valueOf(status),String.valueOf(day)},ORDER.Cols.ACCT,ORDER.Cols.DATE+" DESC");
+        Cursor cursor = getQuery(true,table,colums,null,arg,ORDER.Cols.ACCT,where,ORDER.Cols.DATE+" DESC");
         OrderWrappes value = new OrderWrappes(cursor);
         try{
             if(value.getCount() == 0){
@@ -117,7 +126,7 @@ public class OrderLab {
     public ArrayList<Goods> getGoods(UUID id){
         ArrayList<Goods> list = new ArrayList<>();
         String table = ORDER.NAME + " inner join " + GOODS.NAME + " on " + ORDER.Cols.GOODS + " = "+GOODS.NAME+"._id";
-        Cursor cursor = getQuery(false,table,null,ORDER.Cols.ACCT + " = ?",new String[]{id.toString()},null,null);
+        Cursor cursor = getQuery(false,table,null,ORDER.Cols.ACCT + " = ?",new String[]{id.toString()},null,null,null);
         GoodsWrapper value = new GoodsWrapper(cursor);
         try{
             if(value.getCount() == 0){
@@ -136,8 +145,8 @@ public class OrderLab {
 
     private Cursor getQuery(boolean distinct, String table, String[]colms,
                             String where,
-                            String [] arg, String group, String order){
-        Cursor cursor = mHelper.query(distinct, table,colms,where,arg,group,null,order,null);
+                            String [] arg, String group,String having, String order){
+        Cursor cursor = mHelper.query(distinct, table,colms,where,arg,group,having,order,null);
         return cursor;
     }
 
@@ -146,6 +155,12 @@ public class OrderLab {
       values.put(ORDER.Cols.STATUS,1);
       values.put(ORDER.Cols.NOTE,type);
      mHelper.update(ORDER.NAME,values,ORDER.Cols.ACCT+" = ?",new String[]{id.toString()});
+    }
+    public void sales(UUID id, String type,int status){
+        ContentValues values = new ContentValues();
+        values.put(ORDER.Cols.STATUS,status);
+        values.put(ORDER.Cols.NOTE,type);
+        mHelper.update(ORDER.NAME,values,ORDER.Cols.ACCT+" = ?",new String[]{id.toString()});
     }
     public void sales(UUID acct,String type,int id, int status){
         ContentValues values = new ContentValues();
@@ -212,7 +227,7 @@ public class OrderLab {
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private int getId(){
-        try (Cursor cursor = getQuery(false, GOODS.NAME, new String[]{"Max(_id) as _id"}, null, null, null, null)) {
+        try (Cursor cursor = getQuery(false, GOODS.NAME, new String[]{"Max(_id) as _id"}, null, null, null, null,null)) {
             if (cursor.getCount() == 0) {
                 return 0;
             }
@@ -255,7 +270,7 @@ public class OrderLab {
 
         ArrayList<Order> list = new ArrayList<>();
         String table = ORDER.NAME + " inner join " + GOODS.NAME + " on " + ORDER.Cols.GOODS + " = "+GOODS.NAME+"._id";
-        Cursor cursor = getQuery(false,table,null,ORDER.Cols.DAY + " = ?",new String[]{String.valueOf(day)},null,null);
+        Cursor cursor = getQuery(false,table,null,ORDER.Cols.DAY + " = ?",new String[]{String.valueOf(day)},null,null,null);
       ExelOrderWrapper value = new ExelOrderWrapper(cursor);
         try{
             if(value.getCount() == 0){

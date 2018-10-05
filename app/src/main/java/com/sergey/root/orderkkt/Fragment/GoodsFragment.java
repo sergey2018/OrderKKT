@@ -12,6 +12,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -79,6 +82,13 @@ public class GoodsFragment extends Fragment {
             if (data != null) {
                 value = data.getStringExtra(EXTRA_NOTE);
                 new KKTTask().execute(type);
+            }
+        }
+        if (requestCode == 3 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                value = data.getStringExtra(EXTRA_NOTE);
+                OrderLab.getInstance(getActivity()).sales(id, value,2);
+                getActivity().finish();
             }
         }
     }
@@ -152,6 +162,7 @@ public class GoodsFragment extends Fragment {
         mDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         mGoodsList.setLayoutManager(new LinearLayoutManager(getActivity()));
         update();
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -159,6 +170,26 @@ public class GoodsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_goods,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.del_order:
+                FragmentManager manager = getFragmentManager();
+                NoteDialogFragment dialogFragment = new NoteDialogFragment();
+                dialogFragment.setTargetFragment(GoodsFragment.this, 3);
+                dialogFragment.show(manager, "note1");
+                return true;
+                default:
+                    return  super.onOptionsItemSelected(item);
+        }
     }
 
     @OnClick(R.id.nal_no_cash)
