@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import com.sergey.root.orderkkt.Activity.GoodsActivity;
 import com.sergey.root.orderkkt.Activity.SettinsActivity;
 import com.sergey.root.orderkkt.Adapter.HeaderItem;
 import com.sergey.root.orderkkt.Adapter.ListItem;
-import com.sergey.root.orderkkt.Adapter.OrderAdapter;
 import com.sergey.root.orderkkt.Adapter.OrderItems;
 import com.sergey.root.orderkkt.Adapter.OrderListAdapter;
 import com.sergey.root.orderkkt.DataBase.OrderLab;
@@ -61,7 +59,6 @@ public class OrderFragment extends Fragment {
     private int mStatus = 0;
     private ProgressDialog mDialog;
     private static final String ARG_STATSUS = "status";
-    private OrderAdapter adapter;
     private OrderListAdapter mAdapter;
     private ArrayList<ListItem>mList = new ArrayList<>();
     private BroadcastReceiver mUpdate = new BroadcastReceiver() {
@@ -99,30 +96,6 @@ public class OrderFragment extends Fragment {
     }
 
 
-    /*private void update(){
-        ArrayList<Order> orders = OrderLab.getInstance(getActivity()).getOrder(mStatus);
-        if(orders == null)return;
-        if(adapter == null){
-            adapter = new OrderAdapter(orders,getActivity());
-            mOrderView.setAdapter(adapter);
-        }
-        else {
-            adapter.setOrders(orders);
-            adapter.notifyDataSetChanged();
-        }
-        DividerItemDecoration decoration = new DividerItemDecoration(mOrderView.getContext(),DividerItemDecoration.VERTICAL);
-        mOrderView.addItemDecoration(decoration);
-        mOrderView.addOnItemTouchListener(new GoodsClickListener(getActivity(), new GoodsClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                if(adapter.getOrders().get(position).getStatus() == 0){
-                    UUID id = adapter.getOrders().get(position).getAcct();
-                    Intent intent = GoodsActivity.newIntent(getActivity(),id);
-                    startActivity(intent);
-                }
-            }
-        }));
-    }*/
     private void update1(){
         mList.clear();
         ArrayList<Order> ord = OrderLab.getInstance(getActivity()).getOrder(mStatus);
