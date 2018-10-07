@@ -24,7 +24,11 @@ import android.view.ViewGroup;
 
 import com.sergey.root.orderkkt.Activity.GoodsActivity;
 import com.sergey.root.orderkkt.Activity.SettinsActivity;
+import com.sergey.root.orderkkt.Adapter.HeaderItem;
+import com.sergey.root.orderkkt.Adapter.ListItem;
 import com.sergey.root.orderkkt.Adapter.OrderAdapter;
+import com.sergey.root.orderkkt.Adapter.OrderItems;
+import com.sergey.root.orderkkt.Adapter.OrderListAdapter;
 import com.sergey.root.orderkkt.DataBase.OrderLab;
 import com.sergey.root.orderkkt.GoodsClickListener;
 import com.sergey.root.orderkkt.Model.Order;
@@ -33,11 +37,16 @@ import com.sergey.root.orderkkt.R;
 import com.sergey.root.orderkkt.YandexService;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static com.sergey.root.orderkkt.Adapter.ListItem.TYPE_EVENT;
 
 
 /**
@@ -53,10 +62,12 @@ public class OrderFragment extends Fragment {
     private ProgressDialog mDialog;
     private static final String ARG_STATSUS = "status";
     private OrderAdapter adapter;
+    private OrderListAdapter mAdapter;
+    private ArrayList<ListItem>mList = new ArrayList<>();
     private BroadcastReceiver mUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            update();
+            update1();
         }
     };
     public OrderFragment() {
@@ -88,7 +99,7 @@ public class OrderFragment extends Fragment {
     }
 
 
-    private void update(){
+    /*private void update(){
         ArrayList<Order> orders = OrderLab.getInstance(getActivity()).getOrder(mStatus);
         if(orders == null)return;
         if(adapter == null){
@@ -111,6 +122,58 @@ public class OrderFragment extends Fragment {
                 }
             }
         }));
+    }*/
+    private void update1(){
+        mList.clear();
+        ArrayList<Order> ord = OrderLab.getInstance(getActivity()).getOrder(mStatus);
+        Map<String,ArrayList<Order>> map = getOrder(ord);
+        for(String date: map.keySet()) {
+            HeaderItem item = new HeaderItem();
+            item.setDate(date);
+            mList.add(item);
+            for (Order order : map.get(date)) {
+                OrderItems items = new OrderItems();
+                items.setOrder(order);
+                mList.add(items);
+            }
+        }
+            if(mAdapter == null){
+                mAdapter = new OrderListAdapter(mList,getActivity());
+                mOrderView.setAdapter(mAdapter);
+            }
+            else {
+                mAdapter.setItems(mList);
+                mAdapter.notifyDataSetChanged();
+            }
+            mOrderView.addOnItemTouchListener(new GoodsClickListener(getActivity(), new GoodsClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    int type = mAdapter.getListItem().get(position).getType();
+                    if(type ==TYPE_EVENT){
+                        Order order = ((OrderItems)mAdapter.getListItem().get(position)).getOrder();
+                        if(order.getStatus() == 0 ){
+                            UUID id = order.getAcct();
+                            Intent intent = GoodsActivity.newIntent(getActivity(),id);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }));
+
+
+    }
+
+    public Map<String, ArrayList<Order>> getOrder(ArrayList<Order> orders){
+        Map<String, ArrayList<Order>> or = new TreeMap<>(Collections.reverseOrder());
+        for(Order order: orders){
+            ArrayList<Order> value = or.get(order.getDateText());
+            if(value == null){
+                value = new ArrayList<>();
+                or.put(order.getDateText(),value);
+            }
+            value.add(order);
+        }
+        return or;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,7 +186,7 @@ public class OrderFragment extends Fragment {
         mDialog.setMessage("Передача в кассовый апарат");
         mDialog.setProgress(ProgressDialog.STYLE_SPINNER);
         getActivity().setTitle("Заказы");
-        update();
+        update1();
         setHasOptionsMenu(true);
         return view;
     }
@@ -138,7 +201,7 @@ public class OrderFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        update();
+        update1();
     }
 
     @Override
@@ -192,7 +255,7 @@ public class OrderFragment extends Fragment {
             super.onPostExecute(aVoid);
             if(OrderLab.getInstance(getActivity()).getError()) return;
             Preferes.setDay(getActivity());
-            update();
+            update1();
 
 
         }

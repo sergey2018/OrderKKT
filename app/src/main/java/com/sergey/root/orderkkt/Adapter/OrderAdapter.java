@@ -101,12 +101,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderHolder>
             mPhone =itemView.findViewById(R.id.phone);
             mContact = itemView.findViewById(R.id.contact);
             mStatus = itemView.findViewById(R.id.status);
-            mDate = itemView.findViewById(R.id.date_order);
+         //   mDate = itemView.findViewById(R.id.date_order);
             mClick = itemView.findViewById(R.id.txtOptionDigit);
         }
         public void setOrder(Order order){
             mAdres.setText(order.getAdress());
-            mDate.setText(order.getDateText());
+            //mDate.setText(order.getDateText());
             mPhone.setText(order.getPhone());
             mContact.setText(order.getContact());
             if(order.getStatus() == 0) {

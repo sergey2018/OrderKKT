@@ -5,7 +5,9 @@ import android.text.format.DateFormat;
 
 import com.sergey.root.orderkkt.DataBase.dbShema;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 public class Order {
@@ -97,8 +99,8 @@ public class Order {
     }
 
     public String getDateText(){
-        DateFormat format = new DateFormat();
-        return (String) format.format("dd.MM.yyyy",mDate);
+        SimpleDateFormat df = new SimpleDateFormat("dd.MMM yyyy", Locale.getDefault());
+        return df.format(mDate);
     }
 
     public String getName() {
