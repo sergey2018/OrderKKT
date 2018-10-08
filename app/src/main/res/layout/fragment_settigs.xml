@@ -34,5 +34,6 @@
         android:id="@+id/KKT_type"/>
     <include layout="@layout/sthrih_lan"
       />
+    <include layout="@layout/strih_blutooh"/>
 
 </LinearLayout>

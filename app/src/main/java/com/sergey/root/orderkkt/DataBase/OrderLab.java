@@ -76,7 +76,10 @@ public class OrderLab {
             case 1: mKKT = new ShtrihPrintKKT();
             mKKT.init(context);
             break;
-            case 2: mKKT = new AtolPrintKKT();
+            case 2: mKKT = new ShtrihPrintKKT();
+                mKKT.init(context);
+                break;
+            case 3: mKKT = new AtolPrintKKT();
             default:isON = true;
             break;
         }

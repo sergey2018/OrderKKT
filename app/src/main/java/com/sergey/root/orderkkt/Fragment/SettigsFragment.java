@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.sergey.root.orderkkt.Activity.DeviceListActivity;
 import com.sergey.root.orderkkt.DataBase.OrderLab;
 import com.sergey.root.orderkkt.Preferes;
 import com.sergey.root.orderkkt.R;
@@ -62,6 +64,10 @@ public class SettigsFragment extends Fragment {
     LinearLayout mShtrih;
     @BindView(R.id.search_kkt)
     Button mSearchKkt;
+    @BindView(R.id.shtrih_blutooth)
+    ConstraintLayout shtrihBlutooth;
+    @BindView(R.id.search_blutooh)
+    Button mSearchBlutooh;
     private YandexAuthSdk mSdk;
 
     public SettigsFragment() {
@@ -82,18 +88,29 @@ public class SettigsFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-        if(requestCode == TcpDeviceSearchActivity.REQUEST_SEARCH_TCP_DEVICE){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == TcpDeviceSearchActivity.REQUEST_SEARCH_TCP_DEVICE) {
+            if (resultCode == Activity.RESULT_OK) {
                 Bundle extrax = data.getExtras();
-                if(extrax == null){
+                if (extrax == null) {
                     return;
                 }
                 String adress = extrax.getString("Address");
-                if(adress == null)return;
+                if (adress == null) return;
                 int ind = adress.indexOf(":");
-                mIpAdress.setText(adress.substring(0,ind));
-                mPort.setText(adress.substring(ind+1,adress.length()));
+                mIpAdress.setText(adress.substring(0, ind));
+                mPort.setText(adress.substring(ind + 1, adress.length()));
 
+            }
+        }
+        if(requestCode == 3 ){
+            if(resultCode == Activity.RESULT_OK){
+                Bundle extrax = data.getExtras();
+                if (extrax == null) {
+                    return;
+                }
+                String address = extrax.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                Preferes.setIP_adres(getActivity(),address);
+                new KKTTask().execute();
             }
         }
     }
@@ -142,12 +159,23 @@ public class SettigsFragment extends Fragment {
                 switch (position) {
                     case 0:
                         mShtrih.setVisibility(View.GONE);
+                        shtrihBlutooth.setVisibility(View.GONE);
                         break;
                     case 1:
                         mShtrih.setVisibility(View.VISIBLE);
+                        Preferes.setPortType(getActivity(),"2");
+                        Preferes.setPortClass(getActivity(),"com.shtrih.fiscalprinter.port.SocketPort");
+                        shtrihBlutooth.setVisibility(View.GONE);
+                        break;
+                    case 2:
+                        mShtrih.setVisibility(View.GONE);
+                        Preferes.setPortType(getActivity(),"3");
+                        Preferes.setPortClass(getActivity(),"com.shtrih.fiscalprinter.port.BluetoothPort");
+                        shtrihBlutooth.setVisibility(View.VISIBLE);
                         break;
                     default:
                         mShtrih.setVisibility(View.GONE);
+                        shtrihBlutooth.setVisibility(View.GONE);
                 }
             }
 
@@ -206,8 +234,15 @@ public class SettigsFragment extends Fragment {
     void Test() {
         new KKTTask().execute();
     }
+
+    @OnClick(R.id.search_blutooh)
+    void Bultoof(){
+        Intent intent = new Intent(getActivity(),DeviceListActivity.class);
+        startActivityForResult(intent,3);
+    }
+
     @OnClick(R.id.search_kkt)
-    void Searh(){
+    void Searh() {
         Intent intent = new Intent(getActivity(), TcpDeviceSearchActivity.class);
         startActivityForResult(intent, TcpDeviceSearchActivity.REQUEST_SEARCH_TCP_DEVICE);
     }

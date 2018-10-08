@@ -16,9 +16,12 @@
     <string name="curer">Введите имя курьера</string>
     <string name="phone_call">Позвонить</string>
     <string name="x_report">X-отчет</string>
+    <string name="searDevice">Поиск устройства</string>
+    <string name="scaning">Сканирование</string>
     <string-array name="KKT">
         <item>Нет</item>
         <item>Штрих-М (LAN)</item>
+        <item>Штрих-М bluetooth</item>
         <item>ATOL</item>
     </string-array>
     <string-array name="note">

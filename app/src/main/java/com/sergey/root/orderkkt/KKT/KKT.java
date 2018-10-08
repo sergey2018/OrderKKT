@@ -16,6 +16,7 @@ public interface KKT {
     public void XReport();
     public void ZReport();
     public void close();
+    public void initBluetooth(Context contex);
     public String getDevises();
     public void Email(String Email);
     public void init(Context context);

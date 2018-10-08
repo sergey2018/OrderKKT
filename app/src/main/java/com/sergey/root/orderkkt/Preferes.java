@@ -11,6 +11,8 @@ public class Preferes {
     private static final String DAY="day";
     private static final String SELECT="select";
     private static final String onKKT="kkt";
+    private static final String PORT_TYPE="port_type";
+    private static final String PORT_CLASS="port_class";
 
     public static void setToken(Context context, String token){
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString(YANDEX,token).apply();
@@ -52,5 +54,16 @@ public class Preferes {
     public static int getDay(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context).getInt(DAY,1);
     }
-
+    public static void setPortType(Context context, String porttype){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(PORT_TYPE,porttype).apply();
+    }
+    public static String getPortType(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(PORT_TYPE,"");
+    }
+    public static void setPortClass(Context context, String portclass){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(PORT_CLASS,portclass).apply();
+    }
+    public static String getPortClass(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(PORT_CLASS,"");
+    }
 }

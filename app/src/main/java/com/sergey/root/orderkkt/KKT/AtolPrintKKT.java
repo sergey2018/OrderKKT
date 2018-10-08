@@ -33,6 +33,11 @@ public class AtolPrintKKT implements KKT {
     }
 
     @Override
+    public void initBluetooth(Context contex) {
+
+    }
+
+    @Override
     public String getDevises() {
         return null;
     }

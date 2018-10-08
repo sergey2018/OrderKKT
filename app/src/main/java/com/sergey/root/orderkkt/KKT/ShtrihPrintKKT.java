@@ -11,6 +11,8 @@ import com.shtrih.jpos.fiscalprinter.SmFptrConst;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import jpos.FiscalPrinter;
 import jpos.FiscalPrinterConst;
@@ -175,6 +177,11 @@ try {
     }
 
     @Override
+    public void initBluetooth(Context contex) {
+
+    }
+
+    @Override
     public void Email(String Email) {
         try {
            // mPrinter.fsWriteCustomerEmail(Email);
@@ -187,10 +194,25 @@ try {
     @Override
     public void init(Context context) {
         try {
-            String portName = Preferes.getIP_adres(context)+":"+Preferes.getPort(context);
+            Map<String, String> maps = new HashMap<>();
+            if(Preferes.getPortType(context).equals("2")) {
+                String portName = Preferes.getIP_adres(context) + ":" + Preferes.getPort(context);
+                maps.put("portName", portName);
+                maps.put("portType", Preferes.getPortType(context));
+                maps.put("protocolType","0");
+                maps.put("byteTimeout", "1000");
+            }
+            else {
+                String portName = Preferes.getIP_adres(context);
+                maps.put("portName", portName);
+                maps.put("portType", "3");
+                maps.put("portClass", Preferes.getPortClass(context));
+                maps.put("protocolType","0");
+                maps.put("byteTimeout", "1000");
+            }
             Casir = Preferes.getCuryer(context);
             //SysUtils.setFilesPath(context.getFilesDir().getAbsolutePath());
-            JposConfig.configure("ShtrihFptr", portName, context);
+            JposConfig.configure("ShtrihFptr", context,maps);
         } catch (Exception e) {
             e.printStackTrace();
             return;
