@@ -13,6 +13,7 @@ public class Preferes {
     private static final String onKKT="kkt";
     private static final String PORT_TYPE="port_type";
     private static final String PORT_CLASS="port_class";
+    private static final String ATOL_SETTINGS = "atol_settings";
 
     public static void setToken(Context context, String token){
         PreferenceManager.getDefaultSharedPreferences(context).edit().putString(YANDEX,token).apply();
@@ -65,5 +66,11 @@ public class Preferes {
     }
     public static String getPortClass(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context).getString(PORT_CLASS,"");
+    }
+    public static void setAtolSettings(Context context, String settings){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(ATOL_SETTINGS,settings).apply();
+    }
+    public static String getAtolSettings(Context context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getString(ATOL_SETTINGS,"");
     }
 }

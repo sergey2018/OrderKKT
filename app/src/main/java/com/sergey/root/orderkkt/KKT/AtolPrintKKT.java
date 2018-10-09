@@ -3,13 +3,40 @@ package com.sergey.root.orderkkt.KKT;
 import android.content.Context;
 
 import com.sergey.root.orderkkt.Model.Goods;
+import com.sergey.root.orderkkt.Preferes;
 
 import java.util.ArrayList;
 
+import ru.atol.drivers10.fptr.Fptr;
+import ru.atol.drivers10.fptr.IFptr;
+
 public class AtolPrintKKT implements KKT {
+    private IFptr printer;
+    private String mCassir;
+    public AtolPrintKKT(Context context) {
+        printer = new Fptr(context);
+    }
+
     @Override
     public void Sale(ArrayList<Goods> sale, String type,double summ) {
+        printer.setParam(1021, mCassir);
+        printer.setParam(1203, "123456789047");
+        printer.operatorLogin();
 
+        printer.setParam(IFptr.LIBFPTR_PARAM_RECEIPT_TYPE, IFptr.LIBFPTR_RT_SELL);
+        printer.openReceipt();
+        double sum = 0;
+        for (Goods goods: sale){
+            printer.setParam(IFptr.LIBFPTR_PARAM_COMMODITY_NAME, goods.getName());
+            printer.setParam(IFptr.LIBFPTR_PARAM_PRICE, goods.getPrice());
+            printer.setParam(IFptr.LIBFPTR_PARAM_QUANTITY, goods.getQuantity());
+            printer.setParam(IFptr.LIBFPTR_PARAM_TAX_TYPE, IFptr.LIBFPTR_TAX_NO);
+            printer.registration();
+            sum = sum + (goods.getQuantity() * goods.getPrice());
+        }
+        printer.setParam(IFptr.LIBFPTR_PARAM_SUM, sum);
+        printer.receiptTotal();
+        printer.closeReceipt();
     }
 
     @Override
@@ -19,17 +46,26 @@ public class AtolPrintKKT implements KKT {
 
     @Override
     public void XReport() {
+        printer.setParam(IFptr.LIBFPTR_PARAM_REPORT_TYPE, IFptr.LIBFPTR_RT_X);
+        printer.report();
 
     }
 
     @Override
     public void ZReport() {
+        printer.setParam(1021, mCassir);
+        printer.setParam(1203, "123456789047");
+        printer.operatorLogin();
 
+        printer.setParam(IFptr.LIBFPTR_PARAM_REPORT_TYPE, IFptr.LIBFPTR_RT_CLOSE_SHIFT);
+        printer.report();
+
+        printer.checkDocumentClosed();
     }
 
     @Override
     public void close() {
-
+        printer.close();
     }
 
     @Override
@@ -49,12 +85,14 @@ public class AtolPrintKKT implements KKT {
 
     @Override
     public void init(Context context) {
-
+        String set = Preferes.getAtolSettings(context);
+        mCassir = Preferes.getCuryer(context);
+        printer.setSettings(set);
     }
 
     @Override
     public void connect() {
-
+        printer.open();
     }
 
     @Override

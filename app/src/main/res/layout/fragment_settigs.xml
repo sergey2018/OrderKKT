@@ -35,5 +35,6 @@
     <include layout="@layout/sthrih_lan"
       />
     <include layout="@layout/strih_blutooh"/>
+    <include layout="@layout/atol_settings"/>
 
 </LinearLayout>

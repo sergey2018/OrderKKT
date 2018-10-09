@@ -40,6 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import butterknife.Unbinder;
+import ru.atol.drivers10.fptr.settings.SettingsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,6 +69,10 @@ public class SettigsFragment extends Fragment {
     ConstraintLayout shtrihBlutooth;
     @BindView(R.id.search_blutooh)
     Button mSearchBlutooh;
+    @BindView(R.id.atol_settings)
+    Button mAtolSettings;
+    @BindView(R.id.atol)
+    ConstraintLayout mAtol;
     private YandexAuthSdk mSdk;
 
     public SettigsFragment() {
@@ -102,14 +107,14 @@ public class SettigsFragment extends Fragment {
 
             }
         }
-        if(requestCode == 3 ){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == 3) {
+            if (resultCode == Activity.RESULT_OK) {
                 Bundle extrax = data.getExtras();
                 if (extrax == null) {
                     return;
                 }
                 String address = extrax.getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                Preferes.setIP_adres(getActivity(),address);
+                Preferes.setIP_adres(getActivity(), address);
                 new KKTTask().execute();
             }
         }
@@ -160,22 +165,26 @@ public class SettigsFragment extends Fragment {
                     case 0:
                         mShtrih.setVisibility(View.GONE);
                         shtrihBlutooth.setVisibility(View.GONE);
+                        mAtol.setVisibility(View.GONE);
                         break;
                     case 1:
                         mShtrih.setVisibility(View.VISIBLE);
-                        Preferes.setPortType(getActivity(),"2");
-                        Preferes.setPortClass(getActivity(),"com.shtrih.fiscalprinter.port.SocketPort");
+                        Preferes.setPortType(getActivity(), "2");
+                        Preferes.setPortClass(getActivity(), "com.shtrih.fiscalprinter.port.SocketPort");
                         shtrihBlutooth.setVisibility(View.GONE);
+                        mAtol.setVisibility(View.GONE);
                         break;
                     case 2:
                         mShtrih.setVisibility(View.GONE);
-                        Preferes.setPortType(getActivity(),"3");
-                        Preferes.setPortClass(getActivity(),"com.shtrih.fiscalprinter.port.BluetoothPort");
+                        Preferes.setPortType(getActivity(), "3");
+                        Preferes.setPortClass(getActivity(), "com.shtrih.fiscalprinter.port.BluetoothPort");
+                        mAtol.setVisibility(View.GONE);
                         shtrihBlutooth.setVisibility(View.VISIBLE);
                         break;
                     default:
                         mShtrih.setVisibility(View.GONE);
                         shtrihBlutooth.setVisibility(View.GONE);
+                        mAtol.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -235,10 +244,16 @@ public class SettigsFragment extends Fragment {
         new KKTTask().execute();
     }
 
+
     @OnClick(R.id.search_blutooh)
-    void Bultoof(){
-        Intent intent = new Intent(getActivity(),DeviceListActivity.class);
-        startActivityForResult(intent,3);
+    void Bultoof() {
+        Intent intent = new Intent(getActivity(), DeviceListActivity.class);
+        startActivityForResult(intent, 3);
+    }
+    @OnClick(R.id.atol_settings)
+    void Atol(){
+        Intent intent = new Intent(getActivity(),SettingsActivity.class);
+        startActivityForResult(intent,5);
     }
 
     @OnClick(R.id.search_kkt)

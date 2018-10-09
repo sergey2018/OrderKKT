@@ -1,1 +1,1 @@
-include ':app',':FptrServiceAndroid',':poi-3.17'
+include ':app', ':FptrServiceAndroid', ':poi-3.17', ':libfptr10'

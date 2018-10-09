@@ -7,7 +7,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionName "0.5.3"
         manifestPlaceholders = [YANDEX_CLIENT_ID:"06608458358a4bdda47bd6298f2cba39"]
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -34,7 +34,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'com.github.tony19:logback-android-core:1.1.1-6'
     implementation('com.github.tony19:logback-android-classic:1.1.1-6') {
         // workaround issue #73
@@ -52,6 +52,7 @@ dependencies {
     implementation project(path: ':FptrServiceAndroid')
     implementation 'com.android.support:support-v13:27.1.1'
     implementation project(':poi-3.17')
+    implementation project(':libfptr10')
 }
 repositories {
     jcenter()

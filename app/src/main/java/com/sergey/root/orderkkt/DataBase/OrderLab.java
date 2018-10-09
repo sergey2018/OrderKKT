@@ -69,7 +69,7 @@ public class OrderLab {
 
     private OrderLab(Context context) {
         mHelper = new DB_Helper(context.getApplicationContext()).getWritableDatabase();
-        mContext = context;
+        mContext = context.getApplicationContext();
         int kkt = Preferes.getSelect(context);
         day = Preferes.getDay(context);
         switch (kkt){
@@ -79,7 +79,7 @@ public class OrderLab {
             case 2: mKKT = new ShtrihPrintKKT();
                 mKKT.init(context);
                 break;
-            case 3: mKKT = new AtolPrintKKT();
+            case 3: mKKT = new AtolPrintKKT(mContext);
             default:isON = true;
             break;
         }
