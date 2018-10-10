@@ -19,6 +19,7 @@ public class AtolPrintKKT implements KKT {
 
     @Override
     public void Sale(ArrayList<Goods> sale, String type,double summ) {
+        connect();
         printer.setParam(1021, mCassir);
         printer.setParam(1203, "123456789047");
         printer.operatorLogin();
@@ -37,6 +38,7 @@ public class AtolPrintKKT implements KKT {
         printer.setParam(IFptr.LIBFPTR_PARAM_SUM, sum);
         printer.receiptTotal();
         printer.closeReceipt();
+        close();
     }
 
     @Override
@@ -46,13 +48,16 @@ public class AtolPrintKKT implements KKT {
 
     @Override
     public void XReport() {
+        connect();
         printer.setParam(IFptr.LIBFPTR_PARAM_REPORT_TYPE, IFptr.LIBFPTR_RT_X);
         printer.report();
+        close();
 
     }
 
     @Override
     public void ZReport() {
+        connect();
         printer.setParam(1021, mCassir);
         printer.setParam(1203, "123456789047");
         printer.operatorLogin();
@@ -61,6 +66,7 @@ public class AtolPrintKKT implements KKT {
         printer.report();
 
         printer.checkDocumentClosed();
+        close();
     }
 
     @Override
@@ -88,6 +94,7 @@ public class AtolPrintKKT implements KKT {
         String set = Preferes.getAtolSettings(context);
         mCassir = Preferes.getCuryer(context);
         printer.setSettings(set);
+
     }
 
     @Override

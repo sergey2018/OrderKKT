@@ -118,6 +118,9 @@ public class SettigsFragment extends Fragment {
                 new KKTTask().execute();
             }
         }
+        if(requestCode == 5){
+
+        }
     }
 
     @Override
