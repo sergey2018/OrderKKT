@@ -222,10 +222,15 @@ public class OrderFragment extends Fragment {
             OrderLab.getInstance(getActivity()).createFile(Preferes.getDay(getActivity()));
             return null;
         }
-
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mDialog.show();
+        }
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            mDialog.dismiss();
             if(OrderLab.getInstance(getActivity()).getError()) return;
             Preferes.setDay(getActivity());
             update1();
