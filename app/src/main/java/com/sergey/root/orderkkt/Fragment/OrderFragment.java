@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sergey.root.orderkkt.Activity.GoodsActivity;
+import com.sergey.root.orderkkt.Activity.ReturnActivity;
 import com.sergey.root.orderkkt.Activity.SettinsActivity;
 import com.sergey.root.orderkkt.Adapter.HeaderItem;
 import com.sergey.root.orderkkt.Adapter.ListItem;
@@ -98,7 +99,7 @@ public class OrderFragment extends Fragment {
 
     private void update1(){
         mList.clear();
-        ArrayList<Order> ord = OrderLab.getInstance(getActivity()).getOrder(mStatus);
+        final ArrayList<Order> ord = OrderLab.getInstance(getActivity()).getOrder(mStatus);
         Map<String,ArrayList<Order>> map = getOrder(ord);
         for(String date: map.keySet()) {
             HeaderItem item = new HeaderItem();
@@ -127,6 +128,11 @@ public class OrderFragment extends Fragment {
                         if(order.getStatus() == 0 ){
                             UUID id = order.getAcct();
                             Intent intent = GoodsActivity.newIntent(getActivity(),id);
+                            startActivity(intent);
+                        }
+                        else {
+                            UUID id = order.getAcct();
+                            Intent intent = ReturnActivity.newIntent(getActivity(),id,order.getmType());
                             startActivity(intent);
                         }
                     }

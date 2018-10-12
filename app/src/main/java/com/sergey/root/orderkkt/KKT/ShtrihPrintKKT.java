@@ -63,7 +63,7 @@ public class ShtrihPrintKKT implements KKT {
               }
             }
             mPrinter.printRecTotal(sum,sum , type);
-            //Email("rabot1993@gmail.com");
+            Email("rabot1993@gmail.com");
             mPrinter.endFiscalReceipt(false);
 
             close();
@@ -96,11 +96,11 @@ public class ShtrihPrintKKT implements KKT {
             for (int i = 0; i < sales.size(); i++) {
                 String name = sales.get(i).getName();
                 long price =  toLong(new BigDecimal(sales.get(i).getPrice()));
-                int qtty = (int)new BigDecimal(sales.get(i).getQuantity()).multiply(new BigDecimal(1000)).intValueExact();
+                int qtty = (int)new BigDecimal(sales.get(i).getQuantity()).multiply(new BigDecimal(100)).intValueExact();
                 mPrinter.printRecItemRefund(name, 0, qtty, 0, price, "");
                 summ = summ + (price * qtty);
             }
-
+            Email("rabot1993@gmail.com");
             mPrinter.printRecTotal(summ, summ, type);
             mPrinter.endFiscalReceipt(false);
             close();

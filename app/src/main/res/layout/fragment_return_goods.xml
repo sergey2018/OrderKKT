@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.ReturnGoodsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyReturn"
+        android:layout_width="match_parent"
+        android:layout_height="700dp" />
+
+    <TextView
+        android:id="@+id/textReturnSum"
+        android:layout_width="164dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginLeft="104dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="114dp"
+        android:text="Сумма"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ButtReturn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyReturn"
+        app:layout_constraintVertical_bias="0.071" />
+
+    <Button
+        android:id="@+id/ButtReturn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="139dp"
+        android:layout_marginLeft="139dp"
+        android:background="@drawable/return_sale"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="106dp"
+        android:layout_marginRight="106dp"
+        android:textColor="#ffffff"
+        android:padding="15dp"
+        android:textSize="40sp"
+        android:layout_marginBottom="82dp"
+        android:text="@string/Returns"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textReturnSum"
+        app:layout_constraintTop_toBottomOf="@+id/recyReturn" />
+
+</android.support.constraint.ConstraintLayout>

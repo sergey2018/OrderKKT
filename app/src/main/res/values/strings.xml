@@ -19,6 +19,7 @@
     <string name="searDevice">Поиск устройства</string>
     <string name="scaning">Сканирование</string>
     <string name="atol_settings">Настройка свойств</string>
+    <string name="Returns">Возврат</string>
     <string-array name="KKT">
         <item>Нет</item>
         <item>Штрих-М (LAN)</item>

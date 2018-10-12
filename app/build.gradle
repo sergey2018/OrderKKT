@@ -8,7 +8,7 @@ android {
         targetSdkVersion 27
         versionCode 1
         versionName "0.5.3"
-        manifestPlaceholders = [YANDEX_CLIENT_ID:"06608458358a4bdda47bd6298f2cba39"]
+        manifestPlaceholders = [YANDEX_CLIENT_ID: "06608458358a4bdda47bd6298f2cba39"]
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -57,4 +57,3 @@ repositories {
     jcenter()
     flatDir { dirs = ["../libs"] }
 }
-

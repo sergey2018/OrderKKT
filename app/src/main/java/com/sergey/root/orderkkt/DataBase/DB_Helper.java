@@ -28,6 +28,7 @@ public class DB_Helper extends SQLiteOpenHelper {
                 dbShema.ORDER.Cols.PHONE + " text, "+
                 dbShema.ORDER.Cols.CONTACT + " text,"+
                 dbShema.ORDER.Cols.NOTE + " text,"+
+                dbShema.ORDER.Cols.TYPE + " text, "+
                 dbShema.ORDER.Cols.STATUS + " integer)");
     }
 

@@ -26,6 +26,16 @@ public class Order {
     private double mQuantity;
     private String mCode;
 
+    public String getmType() {
+        return mType;
+    }
+
+    public void setmType(String mType) {
+        this.mType = mType;
+    }
+
+    private String mType="";
+
     public String getAdress() {
         return Adress;
     }

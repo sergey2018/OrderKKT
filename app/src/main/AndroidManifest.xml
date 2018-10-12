@@ -35,6 +35,7 @@
         <activity android:name=".Activity.SettinsActivity"/>
         <activity android:name=".tcp.TcpDeviceSearchActivity"/>
         <activity android:name=".Activity.DeviceListActivity"/>
+        <activity android:name=".Activity.ReturnActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

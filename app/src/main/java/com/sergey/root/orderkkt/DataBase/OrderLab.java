@@ -98,7 +98,7 @@ public class OrderLab {
             where = ORDER.Cols.STATUS+" > ?";
             arg = new String[]{"0"};
         }
-        String [] colums = new String[]{ORDER.Cols.ACCT,ORDER.Cols.PHONE,ORDER.Cols.NOTE,ORDER.Cols.CONTACT,ORDER.Cols.ADRESS,"SUM("+ORDER.Cols.STATUS+") AS "+ORDER.Cols.STATUS,"COUNT("+ORDER.Cols.STATUS+") AS cour",ORDER.Cols.DATE};
+        String [] colums = new String[]{ORDER.Cols.ACCT,ORDER.Cols.PHONE,ORDER.Cols.NOTE,ORDER.Cols.CONTACT,ORDER.Cols.ADRESS,ORDER.Cols.TYPE,"SUM("+ORDER.Cols.STATUS+") AS "+ORDER.Cols.STATUS,"COUNT("+ORDER.Cols.STATUS+") AS cour",ORDER.Cols.DATE};
         Cursor cursor = getQuery(true,table,colums,null,arg,ORDER.Cols.ACCT,where,ORDER.Cols.DATE+" DESC");
         OrderWrappes value = new OrderWrappes(cursor);
         try{
@@ -157,17 +157,20 @@ public class OrderLab {
       ContentValues values = new ContentValues();
       values.put(ORDER.Cols.STATUS,1);
       values.put(ORDER.Cols.NOTE,type);
+      values.put(ORDER.Cols.TYPE,type);
      mHelper.update(ORDER.NAME,values,ORDER.Cols.ACCT+" = ?",new String[]{id.toString()});
     }
     public void sales(UUID id, String type,int status){
         ContentValues values = new ContentValues();
         values.put(ORDER.Cols.STATUS,status);
         values.put(ORDER.Cols.NOTE,type);
+        values.put(ORDER.Cols.TYPE,type);
         mHelper.update(ORDER.NAME,values,ORDER.Cols.ACCT+" = ?",new String[]{id.toString()});
     }
     public void sales(UUID acct,String type,int id, int status){
         ContentValues values = new ContentValues();
         values.put(ORDER.Cols.NOTE,type);
+        values.put(ORDER.Cols.TYPE,type);
         values.put(ORDER.Cols.STATUS,status);
         mHelper.update(ORDER.NAME,values,ORDER.Cols.ACCT+" = ? and "+ORDER.Cols.GOODS+" = ?",new String[]{acct.toString(),String.valueOf(id)});
     }
