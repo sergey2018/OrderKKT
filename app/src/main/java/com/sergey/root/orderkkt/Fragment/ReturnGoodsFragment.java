@@ -82,14 +82,14 @@ public class ReturnGoodsFragment extends Fragment {
                     adapter.getGoods().get(position).setFlags(true);
                 }
                 double sum = summ();
-                textReturnSum.setText("Итого: " + sum + " руб.");
+                textReturnSum.setText(sum + " руб.");
                 adapter.notifyDataSetChanged();
             }
         }));
         DividerItemDecoration decoration = new DividerItemDecoration(recyReturn.getContext(), DividerItemDecoration.VERTICAL);
         recyReturn.addItemDecoration(decoration);
         double sum = summ();
-        textReturnSum.setText("Итого: " + sum + " руб.");
+        textReturnSum.setText(sum + " руб.");
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {

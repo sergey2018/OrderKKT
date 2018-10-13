@@ -10,45 +10,47 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyReturn"
         android:layout_width="match_parent"
-        android:layout_height="700dp" />
+        android:layout_height="400dp"/>
 
     <TextView
         android:id="@+id/textReturnSum"
-        android:layout_width="164dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="104dp"
-        android:layout_marginLeft="104dp"
-        android:layout_marginTop="56dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="114dp"
+        android:layout_marginBottom="68dp"
         android:text="Сумма"
-        android:textSize="50sp"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ButtReturn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyReturn"
-        app:layout_constraintVertical_bias="0.071" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"/>
 
     <Button
         android:id="@+id/ButtReturn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="139dp"
-        android:layout_marginLeft="139dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/return_sale"
-        android:layout_marginTop="59dp"
-        android:layout_marginEnd="106dp"
-        android:layout_marginRight="106dp"
-        android:textColor="#ffffff"
         android:padding="15dp"
-        android:textSize="40sp"
-        android:layout_marginBottom="82dp"
         android:text="@string/Returns"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textReturnSum"
-        app:layout_constraintTop_toBottomOf="@+id/recyReturn" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.915"/>
 
 </android.support.constraint.ConstraintLayout>
