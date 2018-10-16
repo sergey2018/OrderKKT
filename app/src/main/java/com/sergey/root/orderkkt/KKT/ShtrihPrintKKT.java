@@ -31,6 +31,8 @@ public class ShtrihPrintKKT implements KKT {
     private String Description;
     private String Device;
     private String Casir;
+    private String mEmail="";
+    private String mPhone="";
     private boolean mError = false;
 
     public ShtrihPrintKKT() {
@@ -63,10 +65,13 @@ public class ShtrihPrintKKT implements KKT {
               }
             }
             mPrinter.printRecTotal(sum,sum , type);
-            Email("rabot1993@gmail.com");
+           if(!mEmail.equals("")){
+               setmEmail();
+           }
             mPrinter.endFiscalReceipt(false);
 
             close();
+            mEmail = "";
             //KKTLABS.getInstance(mContext).salesClear();
 
         } catch (JposException e) {
@@ -100,7 +105,7 @@ public class ShtrihPrintKKT implements KKT {
                 mPrinter.printRecItemRefund(name, 0, qtty, 0, price, "");
                 summ = summ + (price * qtty);
             }
-            Email("rabot1993@gmail.com");
+            //Email("rabot1993@gmail.com");
             mPrinter.printRecTotal(summ, summ, type);
             mPrinter.endFiscalReceipt(false);
             close();
@@ -183,9 +188,12 @@ try {
 
     @Override
     public void Email(String Email) {
+        mEmail = Email;
+    }
+    private void setmEmail(){
         try {
-           // mPrinter.fsWriteCustomerEmail(Email);
-            mPrinter.directIO(0x39,null,Email);
+            // mPrinter.fsWriteCustomerEmail(Email);
+            mPrinter.directIO(0x39,null,mEmail);
         } catch (JposException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package com.sergey.root.orderkkt.Fragment;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.sergey.root.orderkkt.Adapter.GoodsAdapter;
 import com.sergey.root.orderkkt.DataBase.OrderLab;
 import com.sergey.root.orderkkt.GoodsClickListener;
+import com.sergey.root.orderkkt.KKT.KKT;
 import com.sergey.root.orderkkt.Model.Goods;
 import com.sergey.root.orderkkt.R;
 
@@ -23,6 +25,7 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -42,6 +45,7 @@ public class ReturnGoodsFragment extends Fragment {
     @BindView(R.id.ButtReturn)
     Button ButtReturn;
     Unbinder unbinder;
+    private UUID mArgs;
 
     // TODO: Rename and change types of parameters
 
@@ -95,7 +99,7 @@ public class ReturnGoodsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-           UUID mArgs = (UUID) getArguments().getSerializable(ARG_GOODS);
+            mArgs = (UUID) getArguments().getSerializable(ARG_GOODS);
             mType = getArguments().getString(ARG_TYPE);
             mGoods = OrderLab.getInstance(getActivity()).getGoods(mArgs);
         }
@@ -125,5 +129,29 @@ public class ReturnGoodsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+    @OnClick(R.id.ButtReturn)
+    void onClid(){
+        new ReturnTask().execute(mType);
+    }
+    private  class ReturnTask extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            if(strings[0].equals("Оплата наличными")){
+                OrderLab.getInstance(getActivity()).ReturnSale(mGoods,"0");
+            }
+            else {
+                OrderLab.getInstance(getActivity()).ReturnSale(mGoods,"1");
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            OrderLab.getInstance(getActivity()).sales(mArgs, mType,0);
+            getActivity().finish();
+        }
     }
 }

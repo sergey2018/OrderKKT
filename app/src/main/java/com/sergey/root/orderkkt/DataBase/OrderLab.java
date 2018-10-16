@@ -369,4 +369,7 @@ public class OrderLab {
         }
         return file;
     }
+    public void ReturnSale(ArrayList<Goods> goods, String type){
+        mKKT.ReturnSale(goods,type);
+    }
 }
