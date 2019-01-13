@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -126,7 +127,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return mListItem.size();
     }
     public class OrderHolder extends RecyclerView.ViewHolder{
-        public TextView mClick;
+        public Button mClick;
         private TextView mAdres,mPhone,mContact,mStatus,mDate;
         public OrderHolder(View itemView) {
             super(itemView);

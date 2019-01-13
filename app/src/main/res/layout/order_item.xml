@@ -33,10 +33,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
-                    android:text="@string/adres"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
+                    android:text="@string/adres"
                     android:textColor="#6c6c6c"
                     android:textSize="20sp"/>
 
@@ -44,23 +44,26 @@
                     android:id="@+id/text_adress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="1"
+                    android:paddingRight="30dp"
                     android:text="sadasdasdsad"
                     android:textColor="#6c6c6c"
                     android:textSize="20sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="&#8942;"
-                    android:textAlignment="center"
+
+                <Button
                     android:id="@+id/txtOptionDigit"
-                                   android:textAppearance="?android:textAppearanceLarge"
+                    android:layout_width="39dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:paddingLeft="10dp"/>
+                    android:layout_weight="0"
+                    android:background="#ffffff"
+                    android:text="&#8942;"
+                    android:textAlignment="center"
+                    android:textAppearance="?android:textAppearanceLarge"/>
             </LinearLayout>
 
             <LinearLayout
